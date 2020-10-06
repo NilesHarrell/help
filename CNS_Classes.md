@@ -259,3 +259,169 @@ One more abstraction on the same theme. Containers provide the ability to share 
 [History of Containers]:https://blog.aquasec.com/a-brief-history-of-containers-from-1970s-chroot-to-docker-2016
 [vSAN]:https://cga.sfo2.digitaloceanspaces.com/cns/images/vsan.png
 [Containers O My!]:https://cga.sfo2.digitaloceanspaces.com/cns/images/container.png
+
+
+# Class 02 -- Intro 2 Linux
+## Definitions
+
+* GNU -- GNU is Not Unix
+* Bash -- Bourne Again Shell
+## Brief History
+
+* Linux developed by Linus Torvalds
+* Linux was first announced in 1991 and Linus has continued to lead development since
+* The kernel needed supporting applications provided by GNU (GNU is Not Unix)
+* Linux is free and open-source
+
+<!--
+
+Linux Torvolds started developing Linux as a project because he was sick of the licensing structure of MINIX (POSIX OS developed in 1987). So as an undergraduate he started writing his own replacement. In 1991 he started developing it and he released the first kerenl 1.0 in 1994 (We are currently at Kernel 5.8). The kernel, the core of the operating system, needed a number of applications around it, the Unix applications were alread being rewritten by an organization known as GNU (GNU is Not Unix). Linux is genearlly licensed under the somewhat permissive GNU GPL v2 and is free and open source. The Linux kernel is hosted at [kernel.org] where you can download and compile your own version as well as all additional information associated with it. You can also view the GitHub of Linux on [Linus' GitHub Page]. Take a look and the project and you can see how the creator of git (and Linux) intended it to be used. 
+
+-->
+
+## Windows vs Linux
+
+* Both systems are Desktop and Server multipurpose operating systems
+* Systems are very similar but occupy very different parts of the market
+* Windows owns the desktop and business enterprise
+* Linux owns the web and supercomputer space
+* Linux is generally free to use and pay for support
+* Linux runs faster even with older hardware whereas windows are slower compared to Linux.
+
+<!--
+
+I am often asked what is the differenc between Linux and Windows. The answer is that they are both very different and very similar. They both have full featured Desktop and Server varients. They are both used by billions of people every day. You can do most tasks on either (some are better than others). Today, in reality, Microsoft has moved to make Windows more like Linux while trying to maintain all the things that has made Windows sucessful. Linux on the other hand is open source and community driven and rarly needs to incorperate any technology from Microsoft. Depending on how you look at it, Linux is really the most important piece of code the world has ever known. It is the largest project ever, it has the most active users, and it owns every corner of the technology market with the exception of the SMB and legacy corperate environments. Microsft is however very rich and working to buy their way into segements they are losing. Git, the program, is free and open source. So Microsft purchased GitHub. AWS is based on KVM (now Amazon Linux), Microsoft is pouring money into Azure and having only tempered sucess. Microsft had a phone OS that failed, Android is based on Linux and by far the most popular computing device the world has ever seen. The Coast Guard uses Windows, the world uses Linux. Both are impressive pieces of human enginuity, but born out of different beginnings. We use both operating systems in our class because the world is full of both! 
+
+-->
+
+
+## Why Linux
+
+* It is important to be familiar with both platforms
+* Many tools are Linux only (Kali Linux)
+* Some jobs are easier on Linux, others are easier on Windows
+* Linux allows a user to control every aspect of the operating systems
+
+<!--
+
+Most of the security industry relies heavily on Linux tooks and custom OSes. From foreniscs to reverse engineering Linux by nature does not care about Windows permissions and because of the open nature of the OS it makes it easy to extend and develop tools used by both attackers and defenders. Also, it is assumed that most people have little if any experience with Linux but use Windows every day! As we will dive deeper into both Linux and Windows it was noted by students last year that a short primer would be very helpful. Mainly, we are going to try to get familar with how to use the command line and how build powerful commands and scripts that enable us to do things that are painful and repetitive by hand. We will learn a bit about regular expressions, and redirection as well as some of the best tools for different jobs. 
+
+-->
+
+## What is the Windows of Linux
+
+* The kernel is the lowest level of software in the operating system
+* The kernel is responsible for linking hardware and software
+* Distributions are tooling built on the kernel, tools like package manager
+* Desktops are the Human Machine Interface that can be used to interact with the operating system 
+
+Make sure to check out the [Interactive Distro Timeline]
+I would also **recommend** looking at the [History of Linux]
+* https://www.digitalocean.com/community/tutorials/brief-history-of-linux 
+
+<!--
+
+When you installed the WSL it doesn't look anything like the Graphical User Interface (GUI) you get in Windows. The core of Linus is the kernel that is responsible for communicating with hardware on your system. For example, if you have a webcam that will need to be supported by the kernel or have a kernel module loaded if it isn't. I just loaded a kernel module for a "virtual webcam" just the other day to facilitate software I am using for class to work with teams. The kernel is responble for connecting the hardware and software. From there you need various systems to start and stop service, manage windows and manage software (in our case "packages"). When all these parts are put together and the finish product is provided it is known as a **distribution** or distro for short. There are a few major ones that come from a few camps, we have been using Ubuntu which is based on **Debian** but the widly deployed distro in enterprise is from Red Hat known as Red Hat Enterprise Linux or RHEL for short. RHEL is open source but the community version is called **CENTOS**. RHEL has a support model that makes it update repositories closed but CENTOS almost exactly the same, infact RHEL gives you a script that changes CENTOS to RHEL by simply changing the logos and the addresses of the repositories. Debian uses the **dpkg** based package manager and RHEL uses the **rpm** package manager, dependencies in Debian are managed by **APT** and by **yum** in REHL. The part you see and interact with known as the GUI are usually only preinstalled on Desktop versions of the OS. Server are usually don't have a Desktop because it is just extra software that is not needed. Desktops do range and you can select whatever desktop suits your needs. Many Linux Distros ust GNOME, KDE or XFCE just to name a few. The idea is that you have ultimate flexability on your system and how it works. You can make your desktop whatever you want it to be.
+
+A Quick Stack from Bottom to top:
+
+* Kernel
+* Distro
+* Desktop
+* Applications
+
+-->
+
+## The Terminal
+
+* We will utilize a Terminal which is a text input/output environment
+* Terminals need a shell which is the command interpreter, in our case the Bash Shell (Bourne Again Shell)
+* The Bash Shell replaced the Bourne Shell
+* There are other shells as well like the csh (C Shell) or FiSH (Friendly Interactive Shell)
+* A console is a physical terminal- think keyboard, mouse and screen
+
+For Linux the Fish (friendly interactive shell) works well. Install by typing "sudo apt install fish"
+Fish is a Unix based shell that suggests different commands as you type based on what you have already typed into the command line. 
+
+The Linux Bash Terminals are extremely powerful and can accomplish most major computing functions
+
+## The Directory Structure
+
+* Windows assigns drive letters like C:\ to each drive
+* Linux assigns a "Special File" which is a block device to each drive
+* In Linux you mount the drive to a directory
+
+<!--
+
+```
+constantine@pop-os:~$ df -h
+Filesystem                             Size  Used Avail Use% Mounted on
+/dev/nvme1n1p3                         450G  221G  206G  52% /
+/dev/nvme1n1p1                         498M  280M  218M  57% /boot/efi
+/dev/nvme1n1p2                         4.0G  2.4G  1.7G  59% /recovery
+nas.macris.home:/mnt/nas/shows         8.9T  304G  8.6T   4% /home/constantine/shows
+nas.macris.home:/mnt/nas/music         8.8T  128G  8.6T   2% /home/deanna/Music
+nas.macris.home:/mnt/nas/vmware        9.1T  424G  8.6T   5% /home/constantine/vcenter
+/dev/sda1                              932G  867G   66G  94% /media/constantine/Samsung_T5
+
+```
+-->
+
+## More Directories
+
+* You can use the `tree` command to look at directories in Linux
+* The directory structure is generally the same across distributions (some slight differences)
+
+<!--
+```
+constantine@pop-os:~/$ tree -d / -L 1
+  /                     # root top level directory
+
+ bin -> usr/bin      # Binairies mapped to user directory
+ boot                # Files to boot system
+ dev                 # Device files
+ etc                 # Host configuation Files
+ home                # User home directories
+ lib -> usr/lib      # Share libraries and kernel modules
+ media               # Mount point for external media
+ mnt                 # Mount point for temporary filesystems
+ opt                 # Add-on applications (like Slack)
+ proc                # Virual filesystem documenting kernel and process status
+ root                # Home directory for the root user
+ sbin -> usr/sbin    # System binaries mapped to user directory
+ srv                 # Data for services
+ tmp                 # temporary files
+ usr                 # Multi-User utilities and appliations (user settings and binaries)
+ var                 # Variable Files
+```
+-->
+
+## Everything is a file
+
+* Everything in Linux is a file or running process
+* Files can be either
+  * Ordinary/Regular Files
+  * Special Files
+  * Directories
+
+## Special Files
+
+* Special files can be either:
+  * Block Files -- device files that provide access to system hardware `ls -l /dev | grep "^b"`
+  * Character Files -- device files that provide **unbuffered** serial access to system hardware `ls -l /dev | grep "^c"`
+  * Symbolic Link Files -- A reference to another file, like a shortcut `ls -l /dev | grep "^l"`
+  * Pipe or Named Pipes -- Files that allow inter-process communication `ls -l /dev | grep "^p"`
+  * Socket Files -- Sockets are files that enable inter-process communication `ls -l /dev | grep "^s"`
+
+## Directories
+
+* Directories are special files that can store regular files or special files
+* `ls -l / | grep "^d"`
+* One can make directories with `mkdir`
+* One can change directories with `cd`
+* One can remove empty directories with `rmdir`
+
+[kernel.org]:kernel.org
+[Linus' GitHub Page]:https://github.com/torvalds/linux
+[Interactive Distro Timeline]:https://upload.wikimedia.org/wikipedia/commons/1/1b/Linux_Distribution_Timeline.svg
+[History of Linux]:https://www.digitalocean.com/community/tutorials/brief-history-of-linux
