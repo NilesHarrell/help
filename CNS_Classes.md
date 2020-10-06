@@ -1816,6 +1816,10 @@ As you can imagine there are LOTS of controls you can implement. You can also no
 ```bash
 ansible-playbook -i inventory playbook.yml
 ```
+Lets watch it go!
+
+-->
+
 # Class 09 -- Firewall Configuration and Hardening
 
 ## Introduction
