@@ -3008,3 +3008,106 @@ This type of malware changes a random location in the host file data instead of 
 * It is also very difficult to clean up an infected host due to the modifications to host programs performed by malware
 
 [Call Hooking](https://en.wikipedia.org/wiki/Hooking)
+
+# Class 14 Firewalls
+## Definitions
+
+* ACL -- Access Control List
+* NGAV -- Next Generation Anti Virus
+## References
+
+* Wu/Irwin 18.1 - 18.4
+* Firewalls and Internet Security: Repelling The Wily Hacker -- Bellovin and Cheswick
+
+## Firewalls overview
+
+* Separate trusted areas of network
+* Seperate trusted and untrusted areas of network
+* Separates different parts of network (user and management)
+* Host based to protect OS
+
+
+Firewalls come in many forms. The most basic is your modem/router/switch/access point/firewall (that box the cable company gives you). This is the way you keep your machine separated from the rest of the world. You are currently behind the EDU network firewalls. In the most basic setup the gateway router is also your firewall. As you can imagine these configurations get more complicated very quickly. One can also have a firewall on their host machine; this would be a Host Based Firewall.
+
+
+## Three Main Requirement
+
+* All Traffic between two different trust zones must pass throug the firewall
+* Only authorized traffic should be allowed to pass throug the firewall
+* The firewall must be immune to penetration 
+
+
+
+As Wenliang Du points out in his book *Computer and Internet Security, A Hands-on Approach* and was earlier presentd by Bellovin and Cheswick in *Firewalls and Internet Security: Repelling The Wily Hacker* that a functional firewall needs to have the following attributes:
+
+1) All Traffic between two different trust zones must pass throug the firewall
+2) Only authorized traffic should be allowed to pass throug the firewall
+3) The firewall must be immune to penetration
+
+
+
+## In and Out
+
+* Ingress -- Filtering data coming in
+* Egress  -- Filtering data going out
+
+## The Security Gateway
+
+* Firewall
+* Proxy Filter
+* Network Address Translation
+* Virtual Private Network
+* Anti Virus
+* Anti Spam
+* URL Filtering
+* Intrusion Detection/ Intrusion Prevention
+
+Just like your home "router" is really a router, switch, NAT, firewall and access point. The industry is moving toward the idea of a Unified Security Gateway for many applications. This rolls a number of features into one virtual or physical appliance. As you see above a firewall is not longer all that is included. These systems provide proxy services, NAT, VPN, Anti Virus, Anti Spam, URL Filtering and IDS/IPS. Some of the vendors that provide these "all in one" products are Cisco, Fortigate, Palo Alto Networks, Sophos, Watchguard and Meraki. Host-based firewalls and IDS include products like AVS, Sophos, Fortigate, and Carbon Black. The line is starting to blur between what is a Next-Generation Anti Virus (NGAV) and a traditional host-based firewall. That being said you also need to consider the fact that we now have cloud services to consider and the features and benefits of firewalls through cloud providers, like Azure or Google Cloud, as well as the aftermarket cloud firewalls from vendors like Palo Alto Networks. One notable last type of firewall would be a Web Application Firewall (WAF). These services are hosted by companies like Impervia and Cloudflare and provide websites protection from attacks. 
+
+
+## Types of Firewalls
+
+* Packet Filtering
+  * Stateful
+  * Stateless
+* Proxy Server
+* Host Firewall
+* Application Firewall
+
+## Stateless Packet Filtering
+
+* Firewall decides if packet moves forwarded
+* Per packet basis
+* Based on header info
+
+
+In a stateless packet filtering firewall, the firewall is looking at packets and packet headers... Every packet header. We all know what it's finding in that information right? It is finding IP source and destination. Protocol, like TCP, UDP, ICMP and any flags associated with those protocol. With this information the firewall can make decisions. It can block all IPs from a certain place. Or block destination IPs. Same thing if you want to block a particular protocol. Imagine, if it knows about it, it can be blocked. These rules will be combined to make what most vendors refer to as an Access Control List (ACL). In the example of the text (18.2) we can control traffic from the Finance server to the accounting group as well as from the Web Server to the internet. It specifies that it will accept any port greater than (gt) 1024 and allow connection to 443 for the Finance Web Server and 80 for the Public Web server.
+
+![Packet Filtering FTW](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-29%2017-11-27.png)
+
+
+## Inbound and Outbound Packet Filtering
+
+* Packets can be filtered coming in or going out (inbound or outbound)
+* What do you think is more common?
+* When would you filter incoming?
+* When would you filter outgoing?
+
+## Access Control List
+
+* ACLs are a sequential list of permit and deny conditions
+* All stateful header info can be filtered
+* Order matters, once a match is found it stops checking
+* What should be the last rule?
+* Where should high probability rules be?
+
+
+
+## Why isn't everything a Stateless Packet Filtering Firewall
+
+* No context of the payload, could be application attacks
+* No authentication only IP address
+
+
+The stateless packet filter firewall has an application in being able to set out simple rules to help control the flow of packets around the network. As we saw in the above example you can very easily limit the flow of information to and from servers. There are, however, some drawbacks. I have often heard that "we need to block these countries because that is where the attackers are". This is something a stateless packet filtering firewall can absolutely do. Block all addresses from England or Greece... No problem, the only issue is the Greek hacker knows that no one trusts the Greeks and thus spends $5/month (or 45000 Drachma an hour) on a virtual private server in Chicago to launch her attack from. Additionally, if the attacker was an application layer attack like a Cross Site Scripting or buffer overflow you can imagine that the Stateless Packet Fileting system would not work well. So we can see the uses and drawbacks to this type of firewall. Next class we will go over stateful packet filtering, application firewalls and proxy firewalls. 
+
