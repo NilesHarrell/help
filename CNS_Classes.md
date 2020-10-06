@@ -1868,3 +1868,333 @@ We are nearing the end of our STIG journey and moving from into the next module 
 [Firewall SRG]:https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Firewall_V1R5_SRG.zip
 [GNS3]:https://www.gns3.com/
 [eve-ng]:https://www.eve-ng.net/
+
+# Class 10 Network
+
+## Introduction
+
+Today we will be exploring the network layer. It is important to understand the network layer and how it fits into the OSI model as well as methods to secure the network layer. We will going into a somewhat technical deep dive into the network layer today as we explore areas of advanced routing like MPLS, quality of service (QoS), and Voice over IP (VoIP).
+
+## References
+
+* Wu/Irwin 10.1 - 10.16 -- Quickly review questions at the back of the section.
+* [DHCP Basics](https://support.microsoft.com/en-us/help/169289/dhcp-dynamic-host-configuration-protocol-basics_)
+
+## Definitions
+
+* ATM -- Asynchronous Transfer Mode
+* VC -- Virtual Circuit
+* VPI -- Virtual Path Identifier
+* VCI -- Virtual Channel Identifier
+* QoS -- Quality of Service
+* MPLS -- [Multi-protocol Label Switching](https://en.wikipedia.org/wiki/Multiprotocol_Label_Switching)
+* VoIP -- Voice over IP
+* MAC Address -- Media Access Control Address
+* NAT -- Network Address Translation
+* Datagram -- basic transfer unit on patch-switching network, work on IP, also known as Packet
+* Frame -- work on MAC address to transfer data (layer 2)
+* ARP -- Address Resolution Protocol
+* DHCP -- Dynamic Host Configuration Protocol
+
+## Initial Questions
+
+* Why do we need both the data link layer and network layer?
+* What would be the issue with using just the data link layer?
+
+<!--
+If you consider how a switch works using MAC address you know that the switch keeps, in memory, a record of all the MAC address and which port they are connected to. In this manner the switch can provide the datagram to the desired destination. If you can imagine the switch needs to keep track where everything is on one subnet, the larger the subnet the noisier the switch trying to find what is attached where. There is a pretty good explanation here if you are having issues understanding why routing will be a good idea. It comes down to a few factors:
+
+* Performance, security, cost
+* Switch cost and performance: memory size and search time
+* Broadcast storm: performance, security
+
+By adding in routers we we can divide up the subnets and reduce the load on the switches and provide a more efficient way to address devices. With the concept of Network Address Translation (NAT) we have the ability to efficiently route between internal networks and external network. 
+-->
+
+## The Network Layer
+
+* Responsible for routing datagrams from sending to receiving hosts
+* Source host encapsulates segments from transport layer into datagrams
+* Destination host delivers segments to transport layer
+* A router examines header fields in all IP datagrams (Packets) and forwards to another interface based on routing table
+
+<!--
+The main purpose of the network layer is to take link together subnets. Since inside a subnet the data link layer moves data around. Routing is the act of forwarding datagrams between subnets, routing is accomplished by software. The most popular network layer we use is the **Internet Protocol**  or IP. In the IP the datagram consists of a header and a payload, or data.  There are two version of IP used today, IPv4 with 32-bit addressing the second is IPv6 which was standardized in 1998 with 128-bit addressing. 
+-->
+
+## Router Functions
+
+* Routing
+  * Generate and maintain Routing Table
+  * Use Routing Algorithms: Routers working together to find routes between subnets
+  * Distribute processing
+  * Develop table of **all** routes
+* Forwarding
+  * Move packets from input port to output port
+
+<!--
+
+-->
+
+## Connection Oriented Networks
+
+* Network backbone
+* Very fast data connectivity
+* Supports, Voice, Video and Data
+* Used to support connections between two locations using ATM, MPLS or Network Backbone
+* Every router on the path maintains state information for each connection
+* Cells arrive in order
+
+<!--
+Asynchronous Transfer Mode (ATM) is one of the first types of packet switching that is discussed. It is used in the backbone of networks and can support connection oriented networks. It is a method to set up a Virtual Circuit (VC) for fast data connection between two points. There are two types of VCs, Permanent Virtual Circuits (PVC) and Switched Virtual Circuits (SVC). The main difference being the SVC needs to be reestablished every time data is going to be sent. PVC's are best used for connections between hosts but are mainly used in Frame Relay Modes.
+-->
+
+## ATM Specifics
+
+* No Packets... Cells
+* Fixed length -- 53 bytes
+* VPI -- Virtual Path Identifier
+* VCI -- Virtual Channel Identifier
+
+<!--
+ATM will set up a virtual circuit similar to frame relay. Dedicated circuits are established for the connection. Each routing and translation table is then established to efficiently move cells through the network. In the example in **Figure 10.2** in the text shows a VPI/VCI of 2/4 which has a routing table entry for the incoming port of 7 to move the data to port 5. If that cell came in with 2/9 it would also be moved to port 5 but the VPI/VCI would change and the route may then go to a different destination. This is a method to have various VC's use the same ports on large high bandwidth system. This system is very different than the IP traffic we will be discussing that is connectionless forwarding.
+
+-->
+
+## Connectionless Forwarding
+
+* In an IP network only the destination IP address is needed
+* No call setup required (no established path)
+* Packets can take different paths and may not arrive in order
+* Variable Length
+
+<!--
+The text uses IP datagram (packet) networks as an example of a connectionless network. Routing protocols dictate the routes that are formed in the tables but the routes will look at the IP addresses and route depending on those addresses. Those protocols include the Routing Information Protocol (RIP), Boarder Gateway Protocol (BGP), and Open Shorter Path First (OSPF).
+[example IP address](https://ipinfo.io/AS8167/200.215.0.0/18)
+-->
+
+## IPv4 Header
+
+* Data for this destination IP and order to reassemble held in the IPv4 header
+* The header is typically 20 bytes in length
+* Documented nicely (with links) in [Wikipedia](https://en.wikipedia.org/wiki/IPv4)
+
+## IPv4 Header
+
+![IPv4 Packet Header](https://cga.sfo2.digitaloceanspaces.com/cns/images/ipv4_packet_header.jpg)
+
+## Putting it all together
+
+* Moving different size packets requires fragmentation and reassembly
+* The normal max payload for IP packets is 1500 Bytes
+* [Jumbo Frames](https://en.wikipedia.org/wiki/Jumbo_frame) can carry up to 9000 bytes
+* [Token Ring](https://en.wikipedia.org/wiki/Token_ring) can be 5000 bytes
+
+## Types of Service/Quality of Service
+
+* [ToS -- Types of Service](https://en.wikipedia.org/wiki/Type_of_service)
+* ToS byte marks the prioritization for special handling
+* Byte includes IP Precedence (IPP)
+* Later expanded to the Differentiated Services Code Points (DSCP)
+
+<!--
+ToS is used to identify what type of service the IP Datagram is carrying because IP has no other way to assist in scheduling of the traffic. Some things like video and voice need to be prioritized over items like data transfers. With this in mind the IP header carries a Byte that contains the ToS. This includes the IP Precedence (IPP) which then became part of the more expanded Differentiated Services Code Point (DSCP). From there routers can use types of **Queuing or Scheduling** methods to assure the packets with a high priority are delivered prior to those with a lower priority.
+-->
+
+## Types of Queuing
+
+* FIFO - First in First Out
+* WFQ -- Weighted Fair Queuing
+* LLQ -- Low Latency Queuing
+* CBQFQ -- Class Based Weighted Fair Queuing
+
+<!--
+### First in First Out
+
+FIFO -- It is typically experienced by everyone who purchases products in stores.  Each person stands in line and is processed in the order in which they arrive in line.  The size of the load and the urgency of the purchase have no impact.  This technique is the most common and simplest to implement.  Packets are transmitted in the order in which they are placed in the queue.  This scheduling approach works best in situations in which the ingress and egress ports are closely matched in speed.  However, FIFO is not recommended for time-sensitive traffic, such as voice.
+
+* Most common and simplest to implement
+* Packets are transmitted in the order they are placed in the queue
+  * Works best in situations where the ingress and egress ports are similarly matched in speed
+  * Not adequate for time sensitive traffic, such as voice
+
+### Weighted Fair Queuing
+
+WFQ -- It is the default queuing method on leased wide area network (WAN) interfaces with a speed of E1, i.e. 2.048 Mbps, or less.  It uses up to 256 conversation queues, one for each conversation or flow. Conversations are determined by a combination of the source/destination IP address, the ports involved, and the protocol type. Each flow or traffic class is assigned a weight based upon the IP Precedence.  It provides priority among unequally weighted flows, and prevents small volume, interactive traffic, such as Telnet, from being starved while processing high volume traffic, such as FTP.
+
+* WFQ uses a number of individual queues, one for each flow or conversation
+  * Up to 256 conversation queues
+  * Conversations determined by hash of src/dest IP address, ports, protocol type, and IP Precedence value
+* Each flow or traffic class is assigned weight based on IP Precedence
+* Provides priority among unequally weighted flows
+* Prevents small volume, interactive traffic such as Telnet from being starved out by high volume traffic such as FTP
+
+### Low Latency Queuing
+
+LLQ -- It uses a single priority queue for flows that are latency sensitive, e.g. the airline’s first class passengers.  It is used to guarantee specific types of traffic the bandwidth it needs.  The traffic placed in the priority queue will be serviced prior to any other traffic. All flows that do not match the priority queuing criteria will be serviced by WFQ.  This LLQ queuing criteria can be based upon protocol, IP Precedence, DiffServ markings or an access list.
+
+* Used to guarantee that specific types of traffic receive as much of the bandwidth as needed
+* Single priority queue (PQ) for flows that are latency sensitive
+  * Analogy: first class passenger
+  * Traffic placed in priority queue will be serviced before all other traffic
+  * All flows not matching PQ criteria would be processed by WFQ
+* Queue criteria can be based on protocol, IP Precedence/DiffServ markings, or traffic defined by an access-list
+
+### Class Based Weighted Fair Queuing
+
+CBWFQ -- It ensures that specific types of traffic receive as much of the bandwidth as they require.  Like LLQ, it uses a single priority queue to first serve the flows that are latency sensitive. It will employ up to four bandwidth queues that reserve interface bandwidth for other types of traffic, and these bandwidth queues are serviced after the priority queue.  Any traffic not contained in the priority queue or the bandwidth queues is serviced by WFQ.
+
+* Used to guarantee that specific types of traffic receive as much of the bandwidth as needed
+* Single priority queue which is serviced first for flows that are latency sensitive, as previously described with LLQ
+* Up to four bandwidth queues that reserve interface bandwidth for other types of traffic
+  * Bandwidth queues are serviced after the priority queue
+  * Traffic not in the priority queue or the bandwidth queues is serviced by WFQ
+-->
+
+## IPv4 Addresses
+
+* IPv4 Addresses are a 32-bit identifier broken into 4 octets (0-255)
+* [Addresses allotment](http://www.iana.org/assignments/ipv4-address-space/ipv4-address-space.xhtml)
+* Each Interface generally has one IP Address and one MAC address
+* Routers have a minimum of two interfaces
+* Hosts normally have one interface
+* Switches (Layer 2) have no interfaces
+
+## Subnet
+
+* Subnets are formed based on the **Subnet Mask**
+* The subnet determines the address space of a flat network
+* Each subnet will have at least one gateway interface (to get in or out)
+* Subnet Mask designates the host portion of the IP address vs the subnet portion of the IP address
+
+## 3 Subnets
+
+![A network with 3 subnets](https://cga.sfo2.digitaloceanspaces.com/cns/images/3_subnet.PNG)
+
+## 8 Subnets
+
+![A network with 8 subnets](https://cga.sfo2.digitaloceanspaces.com/cns/images/4_router.PNG)
+
+## Network Classes
+
+* Identifies network address space into 5 classes by using the leading 4 bits
+* Later replaced in 1993 with Classless Inter-Domain Routing in 1993 (CIDR)
+* Class A-E where today we reference only A-C
+
+
+* Class A -- Subnet Mask - 255.0.0.0 -- CIDR - /8
+* Class B -- Subnet Mask - 255.255.0.0 -- CIDR - /16
+* Class C -- Subnet Mask - 255.255.255.0 -- CIDR - /24
+
+
+## Private IP Ranges
+
+* Dedicated private ranges are available
+* These ranges are not routable on the internet
+* Must be behind a NAT or isolated
+
+
+There are three networks that are reserved for private use, known as [Private Networks](https://en.wikipedia.org/wiki/Private_network). One for roughly each class.
+* 10.0.0.0/8
+* 172.16.0.0/12
+* 192.168.0.0/16
+
+
+## CIDR
+
+* Eliminated the limitations of Classed Networks
+* Address format is a.b.c.d/x where x is the # of bits in the subnet part
+* Set "1" to all Subnet sections of binary IP and "0" to all host parts
+* For example: 192.168.1.z (where x is the host IP space) would be 11000000.10101000.00000001.00000000 making the subnet 11111111.11111111.11111111.00000000 or 255.255.255.0 which would be 24 "1"s or /24 in CIDR
+
+## Supernetting
+
+* One can combine multiple /24 networks together
+* Referencing example 10.10 in the text we can combine three /24 networks to make a /22 network
+* Recall that the CIDR is the **number of bits reserved for the subnet**
+
+
+When considering the following subnets:
+
+* 192.60.128.0/24   (11000000.00111100.10000000.00000000)  Class C subnet address
+* 192.60.129.0/24   (11000000.00111100.10000001.00000000)  Class C subnet address
+* 192.60.130.0/24   (11000000.00111100.10000010.00000000)  Class C subnet address
+* 192.60.131.0/24   (11000000.00111100.10000011.00000000)  Class C subnet address
+
+Note the number of bits that are no longer used for host IP addresses (where it stops changing). Count the number of bits from the left to that point. The count is 22 which relates directly to the subnet CIDR. To identify the subnet mask simply replace the subnet part of the binary address with "1"s and the host section with "0"s. To get the broadcast address simply replace the host section of the IP with "1"s. Remember that you use the IP part from before the subnet was calculated.
+
+
+## ARP
+
+* Address Resolution Protocol (ARP) is used to map IP address to MAC address
+* Hosts maintain an ARP Cache for items on the subnet
+
+
+You can check your ARP for your machine by enter Powershell and using the command `arp -a`
+
+This will show you all of the hosts on the subnet that your machines has cached. Now try to ping another machine on the network, you may need to have the machine you are trying to contact allow ping through the firewall. If you are able to accomplish a ping and the machine is on the same subnet you will find that you have added the machine to the ARP cache. 
+
+
+## Limiting Subnet Size
+
+* Remember each subnet needs a network ID address and a broadcast address
+* If you wanted two hosts on a network to communicate how many addresses would you need?
+* What would be the subnet mask and CIDR for that network if you are starting at a 192.168.1.0
+
+
+If you have two hosts on a network you would need 4 addressed considering you have one for a network ID address and one for a broadcast address. One reason to do this is to minimize the chance that another machine could join the network. If you have the subnet set correctly you can only have two machines on that network. To do this we need to look at what we would need to calculate the subnet. With IPs of 192.168.1.1 and 192.168.1.2 we know we need only **two** bits to represent those four addresses.
+
+* 00 -- Network   192.168.1.0
+* 01 -- Host 1    192.168.1.1
+* 10 -- Host 2    192.168.1.2
+* 11 -- Broadcast 192.168.1.3
+
+We know that the IP address is 32 bits so that makes the **CIDR /30** since we are only using 2 bits. If we replace all the subnet mast with "1"s we get a subnet mast of **255.255.255.252**.
+
+
+## DHCP
+
+* Dynamic Host Configuration Protocol
+* Provides network info for a host dynamically (as opposed to statically)
+* Allows hosts to join network without manual configuration
+
+
+Hard-coded by hand to a computer
+* Obtain IP address, subnet mask, Gateway IP address, and DNS IP address from ISP or network manager
+* Type in a PC
+
+DHCP (Dynamic Host Configuration Protocol) 
+* Dynamically get IP address from DHCP server
+* “Plug-and-play”
+* 4 pieces of information are provided by DHCP server
+  * IP address
+  * Subnet mask
+  * Gateway IP addr
+  * DNS IP addr
+
+DHCP will allow host to dynamically obtain its IP address from DHCP server when joining network as well as reuse of IP addresses and support both wired and wireless devices joining the network. The device will only maintain the address as long as it is active.
+
+
+## DHCP On Network
+
+![DHCP client and server on network](https://cga.sfo2.digitaloceanspaces.com/cns/images/DHCP.PNG)
+
+## DHCP Request
+
+![DHCP Request](https://cga.sfo2.digitaloceanspaces.com/cns/images/DHCP2.PNG)
+
+
+1) Host broadcasts “DHCP Discover” message
+2) DHCP server responds with “DHCP offer” message
+3) Host requests IP address: “DHCP request” message
+4) DHCP server sends address: “DHCP ACK” message
+
+Most DHCP servers are configured to let a client reuse a previously allocated network address. This can reduce the amount of broadcast traffic resulting from a DHCP DISCOVER message and a DHCP OFFER message. If a client remembers and wishes to reuse a previously allocated network address, a client may choose to omit the DHCP discover message. The client broadcasts a DHCPREQUEST message on its local subnet. The message includes the client's network address in the 'requested IP address' option. If the client used a 'client identifier' to obtain its address, the client must use the same 'client identifier' in the DHCPREQUEST message. **chaddr** may be used both as a hardware address for transmission of DHCP reply messages and as a client identifier. Servers with knowledge of the client's configuration parameters respond with a DHCPACK message to the client.
+
+A relay agent is a small program that relays DHCP messages between clients and servers on different subnets. Routers connecting each subnet should comply with DHCP relay agent capabilities described in RFC 1542.
+
+* BOOTP relay agents pass the message on to DHCP servers not on the same subnet. 
+* When DHCP server receives the DHCPDISCOVER message, it processes and sends an IP address lease offer (DHCPOFFER) directly to the relay agent identified in the gateway IP address (GIADDR) field.
+* The router then relays the address lease offer (DHCPOFFER) to the DHCP client using MAC (hardware) address
+
+
