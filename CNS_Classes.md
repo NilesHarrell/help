@@ -2197,4 +2197,311 @@ A relay agent is a small program that relays DHCP messages between clients and s
 * When DHCP server receives the DHCPDISCOVER message, it processes and sends an IP address lease offer (DHCPOFFER) directly to the relay agent identified in the gateway IP address (GIADDR) field.
 * The router then relays the address lease offer (DHCPOFFER) to the DHCP client using MAC (hardware) address
 
+# Class 11 Routing and Interior Gateways
+## References
+
+* Wu/Irwin 12.1 - 12.8 -- This material should be review, but we will be working through the first half of the text during the beginning portion of class in hopes to provide a common background. Quickly review questions at the back of the section.
+* [YouTube on OSPF](https://www.youtube.com/watch?v=kfvJ8QVJscc)
+## Definitions
+
+AS -- Autonomous System
+IGP -- Interior Gateway Protocols
+LS -- Link State Algorithm
+DV -- Distance Vector Algorithm
+RIP -- Routing Information Protocol
+OSPF -- Open Shortest Path First
+IGRP -- Interior Gateway Routing Protocol (Cisco only)
+DR -- Designated Router
+BDR -- Backup Designated Router
+
+## Routing Protocol Overview
+
+* Static
+  * Configured manually -- Get from one place to another
+* Dynamically
+  * Utilize Routing Protocols to generate routing tables, update tables priodically, trigger updates when link changes
+
+
+Gernerally, when we are talking about routing in class we are talking about **Interior Gateway Protocols** for what we have been calling "networks" or "domains" the text calls **Autonomous Systems** defined as is an independetly administered network. An **AS** would be like the USCGA EDU network or the EE CyberNet Network. Right now we will not be talking in depth about Iter-AS Routing (which would be between AS), which is primarly the **Boarder Gateway Protocol**. We will be discussing the two main open Interior Gateway Protocol, Routing Information Protocol (RIP) and Open Shortest Path First (OSPF). These systems both work in differnt ways; one on UDP Port 520 and the other on its own [protocol number 9](https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers). The text discusses specific methods to configure these systems on Cisco routers however we will not dive deep into that aspect. But please keep note of this location in the event it needs to be referenced in the future.
+
+| Type             | Name                      | Protocol                                | Port/protocol number |
+|------------------|---------------------------|-----------------------------------------|----------------------|
+| Intra-AS Routing | Interior Gateway Protocol | Routing Information Protocol (RIP)      | UDP Port Number 520  |
+| Intra-AS Routing | Interior Gateway Protocol | Open Shortest Path First (OSPF)         | Protocol Number 89   |
+| Intra-AS Routing | Interior Gateway Protocol | Interior Gateway Routing Protocol(IGRP) | Protocol Number 9    |
+| Inter-AS Routing | Exterior Gateway Protocol | Boarder Gateway Protocol (BGP)          | TCP Port 179         |
+
+
+## VLAN Routing
+
+* SAME VLAN -- Routing within a VLAN is completed by the router relaying the packet as if it was on the same network
+  * Machine A would make an ARP request for Machine B's MAC Address
+  * Router realizes Machine B is on the same subnet and return **its own** MAC
+  * Packet reaches the router and is relayed to Machine B
+
+![Same VLAN](https://cga.sfo2.digitaloceanspaces.com/cns/images/VLAN2.PNG)
+
+## VLAN Routing
+
+* DIFFERNT VLAN -- Routing between VLANs is accomplished by the router forwarding the packet to the default gateway
+  * Once at the default gatway, the router will forward the packet according to the routing table
+  * Packet will then be delivered to Machine B
+
+![Differnt VLAN](https://cga.sfo2.digitaloceanspaces.com/cns/images/VLAN3.PNG)
+
+## Routing Algorithems Knowledge
+
+* Global Topology
+  * All routers have a complete topology and link cost
+  * Link State (LS) algorithem in place
+* Local Topology (Decentralized)
+  * Knowledge of Link Cost for physically connected neighbors
+  * Knowledge of routing tables of physically connected heighbors
+  * Iterative and converging process of computation, exchange info with neighbors
+  * Distance Vector (DV) algorithm
+
+
+
+## OSPF
+
+* Open Shortest Path First
+* Open standard (RFC 1247 and RFC 2328)
+* Interior gateway protocol
+* Link State Protocol
+
+
+
+## OSPF - Link State
+
+* Uses the Link State Algorithm
+* Complete topology map at each node
+* Shortest Path First (SPF) computation using Dijkstra's Algorithm
+* Three main steps
+  * Become neighbors
+  * Exchange DB information
+  * Choose the best route - SPF
+
+
+The idea of Open Shortest Path First is that each router will broadcast a message to other routers stating a description of all the router interfaces. This description includes the IP address, subnet mast, type of link (bandwidth) and other interfaces connected. All of this data will form a Link State Database (LSDB).
+
+
+## OSPF
+
+* Publish Link State Advertisment (LSA) disseminsated to entire area via flooding
+  * Uses Protocol Type 89
+  * Uses both Unicast and Multicast
+* Multicast Addresses
+  * 224.0.0.5 (all SPF/link state routers, also known as AllSPFRouters)
+  * 224.0.0.6 (all Designated Routers, AllDRouters) are reserved for OSPF
+
+
+When the router sends the message with interface information, called the Link State Advertisement (LSA) it does so without using TCP/IP. It is usign its own **Protocol Number 89** and will send these on unicast and multicast. This is designed to allow the routers to keep each other updated as to their state and provide the ability for the network to choose differnt routes depending on changes.
+
+
+## Hierarchical OSPF
+
+* Two-level hierarchy
+  * Backbone: transit area, area 0
+  * Regular areas: for routers connected to hosts -- Recommended < 50 routers/area
+  * Link-state advertisements only inside one area -- To overcome the drawbacks of flooding and heavy computation
+  * Each node has detailed area topology
+  * Each node only knows direction (shortest path) to nodes in other areas
+  * Smaller routing table to minimize cost and improve performance
+* Area border routers: “summarize” distances  to nodes in its own area, and advertise to other area border routers
+* Backbone routers: run OSPF routing in backbone area
+* AS border routers: connect to other AS’s
+
+
+
+## OSPF -- Build Database
+
+* After the hello message and the excange of LSDB **each router calculates the shortest path tree** using The Shortest Path First(SPF) algorithm
+* Once entry has aged the router will sent a Link State Update (LSU) to verify links are still active (30 min)
+
+## OSPF -- ToS
+
+* Link Cost can be adjusted to network characteristics like bandwidth, latency or monetary cost
+* Standard "Cost" is **10^8/bandwidth**
+* Allows multiple "same cost" path, **unlike RIP**
+* Allows multple cost metrics
+* ToS can be used when multiple cost metrics are used
+
+## OSPF -- Dijkstra Algorithm
+
+* Method used to determine shortest path
+* Uses link cost to calculate routing table
+* Walks through links to find shortest path
+
+
+Using the Dijkstra Algorithm is how routers develop the table for the shortest route. A good summary of this [Algorithm](https://www.youtube.com/watch?v=GazC3A4OQTE). This method can be used for any path finding... Including mapping...
+
+### Dijkstra in Python
+
+For those inclined to code check it out in Python
+
+```python
+import sys
+# Function to find out which of the unvisited node
+# needs to be visited next
+def to_be_visited():
+  global visited_and_distance
+  v = -10
+  # Choosing the vertex with the minimum distance
+  for index in range(number_of_vertices):
+    if visited_and_distance[index][0] == 0 \
+      and (v < 0 or visited_and_distance[index][1] <= \
+      visited_and_distance[v][1]):
+        v = index
+  return v
+# Creating the graph as an adjacency matrix
+vertices = [[0, 1, 1, 0],
+            [0, 0, 1, 0],
+            [0, 0, 0, 1],
+            [0, 0, 0, 0]]
+edges =  [[0, 3, 4, 0],
+          [0, 0, 0.5, 0],
+          [0, 0, 0, 1],
+          [0, 0, 0, 0]]
+number_of_vertices = len(vertices[0])
+# The first element of the lists inside visited_and_distance
+# denotes if the vertex has been visited.
+# The second element of the lists inside the visited_and_distance
+# denotes the distance from the source.
+visited_and_distance = [[0, 0], [0, sys.maxsize], \
+[0,sys.maxsize], [0,sys.maxsize]]
+for vertex in range(number_of_vertices):
+  # Finding the next vertex to be visited.
+  to_visit = to_be_visited()
+  for neighbor_index in range(number_of_vertices):
+    # Calculating the new distance for all unvisited neighbours
+    # of the chosen vertex.
+    if vertices[to_visit][neighbor_index] == 1 and \
+     visited_and_distance[neighbor_index][0] == 0:
+      new_distance = visited_and_distance[to_visit][1] \
+      + edges[to_visit][neighbor_index]
+      # Updating the distance of the neighbor if its current distance
+      # is greater than the distance that has just been calculated
+      if visited_and_distance[neighbor_index][1] > new_distance:
+        visited_and_distance[neighbor_index][1] = new_distance
+    # Visiting the vertex found earlier
+    visited_and_distance[to_visit][0] = 1
+i = 0
+# Printing out the shortest distance from the source to each vertex
+for distance in visited_and_distance:
+  print("The shortest distance of ",chr(ord('a') + i),\
+  " from the source vertex a is:",distance[1])
+  i = i + 1
+```
+
+### Dijkstra in Matlab
+
+Or Matlab if you like that:
+
+```matlab
+%---------------------------------------------------
+% Dijkstra Algorithm
+% author : Dimas Aryo
+% email : mr.dimasaryo@gmail.com
+%
+% usage
+% [cost rute] = dijkstra(Graph, source, destination)
+%
+% example
+% G = [0 3 9 0 0 0 0;
+%      0 0 0 7 1 0 0;
+%      0 2 0 7 0 0 0;
+%      0 0 0 0 0 2 8;
+%      0 0 4 5 0 9 0;
+%      0 0 0 0 0 0 4;
+%      0 0 0 0 0 0 0;
+%      ];
+% [e L] = dijkstra(G,1,7)
+%---------------------------------------------------
+function [e L] = dijkstra(A,s,d)
+if s==d
+    e=0;
+    L=[s];
+else
+A = setupgraph(A,inf,1);
+if d==1
+    d=s;
+end
+A=exchangenode(A,1,s);
+lengthA=size(A,1);
+W=zeros(lengthA);
+for i=2 : lengthA
+    W(1,i)=i;
+    W(2,i)=A(1,i);
+end
+for i=1 : lengthA
+    D(i,1)=A(1,i);
+    D(i,2)=i;
+end
+D2=D(2:length(D),:);
+L=2;
+while L<=(size(W,1)-1)
+    L=L+1;
+    D2=sortrows(D2,1);
+    k=D2(1,2);
+    W(L,1)=k;
+    D2(1,:)=[];
+    for i=1 : size(D2,1)
+        if D(D2(i,2),1)>(D(k,1)+A(k,D2(i,2)))
+            D(D2(i,2),1) = D(k,1)+A(k,D2(i,2));
+            D2(i,1) = D(D2(i,2),1);
+        end
+    end
+    for i=2 : length(A)
+        W(L,i)=D(i,1);
+    end
+end
+if d==s
+    L=[1];
+else
+    L=[d];
+end
+e=W(size(W,1),d);
+L = listdijkstra(L,W,s,d);
+end
+```
+
+
+
+## Load-Sharing Multipath OSPF
+
+* If there is a "tie" in cost OSPF can share the load accross the links
+* When sharing load the packets may not arrive in order
+* Utilizing multipath OSPF can improve latency and better utilize overall bandwidth
+
+## Routing Information Protocol
+
+* RIP is an older routing protocol originating from BSD-Unix in 1982
+* Has two versions, RIP-1 and RIP-2
+* RIP-1
+  * No authentication
+  * 15 Hop Limit
+  * Don't use it
+* RIP-2 (RFC 2453)
+  * Optional authentication
+  * Variable subnet mask (better to handle complex network)
+  * Same 15 hop limit
+
+
+### RIP vs OSPF
+
+| Protocol                            | RIP-2                                                                                                                                                                                               | OSPF                                                                                                             |
+|-------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| Algorithm                           | Distance vector                                                                                                                                                                                     | Link state                                                                                                       |
+| Message complexity                  | Each update is a routing table broadcast from a directly connected neighbor                                                                                                                         | O(N*E) On initial LSDB exchange; updates only contain link state changes                                         |
+| Reducing broadcast/multicast        | None                                                                                                                                                                                                | DR and BDR                                                                                                       |
+| Speed of convergence                | RIP converges slower than OSPF. In large networks convergence gets to be in the order of minutes. RIP routers go through a period of a hold-down and garbage collection in order to remove a route. | Better convergence than RIP: this is because routing changes are propagated instantaneously and not periodically |
+| Storage                             | Directly connected neighbors’ routing tables: O(N)                                                                                                                                                  | O(N*E) in all routers                                                                                            |
+| Network delays and link costs       | Only the number of hops                                                                                                                                                                             | Yes                                                                                                              |
+| Hop count limit                     | 15                                                                                                                                                                                                  | No                                                                                                               |
+| Variable length subnet masks (vlsm) | Yes                                                                                                                                                                                                 | Yes                                                                                                              |
+| Maintenance of routing tables       | Periodic broadcasts of full routing tables consume a large amount of bandwidth                                                                                                                      | Updates are only sent in case routing changes occur instead of periodically.                                     |
+| Authentication                      | Yes                                                                                                                                                                                                 | Yes                                                                                                              |
+| Load balancing                      | No                                                                                                                                                                                                  | Yes                                                                                                              |
+| Type-of-service (TOS) support       | No                                                                                                                                                                                                  | Yes                                                                                                              |
+| Hierarchical networks               | Flat                                                                                                                                                                                                | Areas                                                                                                            |
 
