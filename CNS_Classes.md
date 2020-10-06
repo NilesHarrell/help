@@ -1824,11 +1824,10 @@ Lets watch it go!
 
 ## Introduction
 
-<!--
+
 
 We are nearing the end of our STIG journey and moving from into the next module on networking. With that we have a rather light class discussing the STIG guidance and tooling around what we consider to be appliacnes and other devices. As you can imagine the endpoint is only one aspect of an entire environment. One could assume that when you purchased a network device it would come ready to configure and put into service. That is not the case. Like an operating system a firewall, IDS, or mobile device can have security baseline configuations applied to it like operating systems and applications. For that reason we are going to briefly talk about the types of things you can STIG that are not desktops or servers. 
 
--->
 
 ## References
 
@@ -1865,6 +1864,7 @@ We are nearing the end of our STIG journey and moving from into the next module 
 * [GNS3] and [eve-ng] is a network modeling program
 * Build your network and test connectivity and security
 * Build configurations for device and export them to production
+
 [Firewall SRG]:https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_Firewall_V1R5_SRG.zip
 [GNS3]:https://www.gns3.com/
 [eve-ng]:https://www.eve-ng.net/
