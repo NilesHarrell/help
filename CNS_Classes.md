@@ -1077,3 +1077,742 @@ Check out the **suggested** [ATT&CK Whitepaper] about the design philosophy. We 
 [MITRE Workshop Videos]:https://attack.mitre.org/resources/training/cti/
 [MITRE Workshop Slide Deck]:https://attack.mitre.org/docs/training-cti/CTI%20Workshop%20Full%20Slides.pdf
 [Root Cause Analysis for Beginners]:https://ldh.la.gov/assets/medicaid/hss/docs/NH/RootCauseForBeginners.pdf
+
+# Class 07 Windows Hardening
+
+## Introduction
+
+* Operating system and application hardening is the first and last line of defense
+* Consider the OSI Model when looking at holistic hardening of a system
+
+* Consider both desktops, servers and appliances when hardening systems
+
+<!--
+Host hardening is what can be considered the first and last line of defense. As one can imagine end users represent the biggest risk to security on any network. Like we spoke about in Defense in Depth the approach should be layered accross the OSI model. When working with the endpoint you need to consider security at every level. From the desktop you consider the vectors that a user will be able to enable/access. For example, a user can only click a link that gets to them from someone else, how do people communicate, how would they get that link? Consider email, web browser, chat. How would an advesary get on your network, where does your internal network cabeling run? Is your data center locked? What will stop malicious activity, do you have AV/AM? Will the operating system keep enough logs to piece togehter what happened? Do you have auditing turned on?
+
+As we have learned with the different standards we were introduced to there are best pratices that we should attempt to follow in this process. We need to consider each use case for machines and limit the system operation to that specicific usecase. A server should be limited in its operation to the services it offers. When additional services are coming from that system it should alert administrators. 
+-->
+
+## Learning Outcome
+
+* Describe for Windows (Desktop and Server), the steps necessary for hardening the OS with respect to DISA standards (OSH1)
+* Describe for Windows Applications (Chrome, Adobe Reader), the necessary steps for hardening applications with respect for DISA standards
+* Understand additional OS and Application hardening tools and standards
+* Securely configure Windows (Desktop and Server), remove or shutdown unnecessary components and services, close unnecessary ports and ensure that all patches and updates are applied (OSH2)
+
+<!--
+
+-->
+
+## References
+
+* [Windows 10 Hardening Blog](https://www.microsoft.com/security/blog/2019/04/11/introducing-the-security-configuration-framework-a-prioritized-guide-to-hardening-windows-10/)
+* [Microsoft Security Compliance Toolkit](https://docs.microsoft.com/en-us/windows/security/threat-protection/windows-security-baselines)
+* [Networks Hardening Checklist](https://www.netwrix.com/windows_server_hardening_checklist.html)
+* [US Government Configuration Baseline](https://csrc.nist.gov/Projects/United-States-Government-Configuration-Baseline)
+
+<!--
+
+-->
+
+## Definitions
+
+* MBSA -- Microsoft Baseline Security Analyzer
+* SCT  -- Microsoft Security Compliance Toolkit
+
+<!--
+
+-->
+
+## Operating System Hardening
+
+* A host is any machine on a network that is given an IP and communicates
+* Host Hardening includes Hardware, Operating System and Software (think OSI model)
+* A host can also reference the base machine that virtualization sits on or the specific machine (desktop)
+* Technically virtual machines have and IP and can communicate on the network however they are normally seperated from "Hosts" by referencing them as "VMs"
+
+<!--
+For the purpose of this course we are talking about hardening the operating system, it can be assumed this also can extend to the applications as well as hardware (BIOS etc.) Many times it is important to remember the items in the technology stack. You may also hear OS hardening referred to ask host hardening where the host is implied to be the computer you are working on. The host is the discrete hardware unit. In the case of Hypervisor hosts, the host is the physical machine that make up the datacenter. The Virtual Machines (VMs) sit on top of the hosts thus the VMs have Operating Systems that can be hardened as well as the software specific to interacting with the Hybervisor (usually called "VM Tools"). Normal hardening procedures can be applied to the VM and there are usually hardening standards for the Hybervisor Host (the physical machine).
+-->
+
+## Media Verification
+
+* When downloading media it is important to verify the integrity of the file and servers it is coming from
+* In Windows this is accomplished by downloading from official Microsoft Servers
+* Another common way to verify media is to check the hash of the file
+
+<!--
+One of the most important parts of installing an OS is making sure that the system you installing is the intended compiled version the company, in this case Microsoft, intended. This is the **Integrity** of the file. Has the file be modified without the end user knowing. One way to tell this is to check the SSL Certificate on the website. The other way to verify integrity is to use the __file hash__. This method will use a one way cryptographic algorithem to verify that the file is exactly the same and that 
+
+-->
+
+## Windows Media Verfication
+
+![Download](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202019-12-31%2011-24-19.png)
+<!--
+This photo show the download page from the "Microsoft Volume License Service." This is one of the methods one would obtain a version of Windows from. Note that you can get the license key here as well as select various parameters for your installer. The "Info" button will bring up the next screen that gives more info about the file you are going to download.
+
+-->
+
+## Windows Media Verfication SHA hash
+
+![Windows](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202019-12-31%2011-45-17.png)
+
+<!--
+This image shows you the "Info" screen on the download you selected. Note that the SHA256 Code is posted. As you can imagine you can try to see if this is a valid file using a service like [VirusTotal](https://www.virustotal.com/gui/home/search). This is usually reserved for application data like the calculator shown in class:
+```powershell
+Get-FileHash C:\Windows\notepad.exe -Algorithm SHA256
+```
+With the hash you can verify the file is the authentic one. By posting the hash anyone can verify authenticity.
+
+Below is the text version of the hash from the photo:
+
+SHA256: AAE4047F95708C471B52494674EDFAC59D6F2FC5E22112C81E8737D24ECC9B52
+File name: en_windows_10_business_editions_version_1809_updated_dec_2019_x64_dvd_2c521206.iso
+
+You can check the file on either Windows or Linux:
+## Linux (Terminal)
+[How To](https://help.ubuntu.com/community/HowToSHA256SUM)
+```bash
+sha256sum <<filename>>
+```
+## Windows (Powershell)
+[How To](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7)
+`Get-FileHash <<C:\filepath\filename>> -Algorithm SHA256 | Format-List`
+-->
+
+## Microsoft Baseling Security Analyzer
+
+* The MBSA is an example of a tool provided by the OS vendor to assist in configuring a secure system.
+* System is useful for measuring patch compliance level for offline machines
+* Mostly has been replaced with the Microsoft Security Compliance Toolkit
+
+<!--
+The Microsoft Baseline Security Analyzer is a tool made by Microsoft to assist in compliance checking based on patch level. The most basic aspect of OS hardening is to manage patches. In the event that you do not have access to Microsoft Update Servers or Microsoft System Center Configuation Manager (SCCM) servers this tool can give patch level management and an idea of the vulnerabilities the system has based on patch level. There are other methods to obtain this information like powershell scripts, but this tool is useful to have in your toolbox. When a system is offline it is not as easy to make sure what level of patching you are at. 
+-->
+
+## Microsoft Security Compliance Toolkit/Manager
+
+* A set of tools for enterprise administrators
+* Allows full security configuration baseline lifecycle
+* Download--Analyze--Test--Edit--Store
+
+<!--
+The Microsoft Security Compliance Toolkit and Manager is a suite of tools and reports avalible for current versions of Windows 10 and Windows Server (1909). The system enables you to, like the STIG and SCAP tools, to load baseline settings for various OS versions and services. These settings range from password complexitiy to update settings. With the hundreds of tailored settings you have the ability to create custom baselines that can be used in place or in conjunction with other tools and baselines. 
+* [Microsoft Secirty Compliance Manager](https://www.microsoft.com/en-us/download/details.aspx?id=53353)
+* [Microsoft Security Compliance Toolkit](https://www.microsoft.com/en-us/download/details.aspx?id=55319)
+
+As mentioned it is very useful to be familiar with this product for the purpose of developing and deploying custom control sets. 
+-->
+
+## Ports Protocols and Services
+
+* Limiting the functionality of the system enables reduction in attack vectors
+* If a service is not running it can not be explited
+* Use `netstat` to display active TCP conncations, ports on which the computer is listening as well as other useful network info
+
+<!--
+It is important to understand what services a computer has running. By limiting these programs you can more easily defend a system. This is a core concept in hardening a system. Expore the [netstat](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/netstat) as a way to determine this information. Put together a `netstat` command to display your computer stats!
+-->
+
+## Active Directory
+
+* A directory service that keeps track of all the information in a network (Users, Computers, Printers, Security Principals)
+* The main Active Directory service is the Domain Services (AD DS), which stores directory info and manages interactions of users with the domain.
+* Most if not all Government Systems are based on Active Directory
+
+# Class 08 -- Linux Hardening
+
+## Introduction
+
+* Similar to Microsoft Windows Hardening there are standards and tools for hardening *nix systems (Linux, Unix etc)
+* You will notice differences in this process since, by its nature, Linux lends itself to automation
+* Most Linux systems tend to be used for development or hosting of services so the desktop use-case is minimal
+
+<!--
+The SCAP content can be used to automate checking these standards but how can we actually mange compliance at scale. For Windows the approach would be to use Active Directory and Group Policy to push a standard policy to all systems. The downside to this is that one would need to usually import or build that group policy in the system and as described in **Lab 1** this ends up being a very manual process. This
+-->
+## References
+
+* [OpenSCAP Tutorial](https://blog.learningtree.com/practical-steps-toward-compliance-openscap/)
+* [Ansible Hardening](https://github.com/openstack/ansible-hardening)
+* [Ansible Compliance](https://www.ansible.com/resources/webinars-training/security-and-compliance-automation-with-ansible)
+* [Microsegmentation](https://www.darkreading.com/edge/theedge/a-beginners-guide-to-microsegmentation/b/d-id/1335849)
+* [Zero Trust Networks](https://cloud.google.com/beyondcorp/#researchPapers)
+
+## Definitions
+
+* SHA -- [Secure Hashing Algorithems](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)
+* ISO -- [Disk Image in archive format](https://en.wikipedia.org/wiki/ISO_image)
+* SSL -- [Old vernacular for Secure Socket Layer now Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security)
+* DMZ -- [Demilitarized Zone on Network](https://en.wikipedia.org/wiki/DMZ_(computing))
+* SSH -- [Secure Shell](https://en.wikipedia.org/wiki/Secure_Shell)
+
+## File Integrity of Install Media
+
+* Similar to the method for Windows
+* [Download page and hash are usually found together](https://access.redhat.com/downloads/content/479/ver=/rhel---8/8.1/x86_64/product-software)
+* Make sure to check you are at the correct site (Check the SSL Cert)
+* Works for software as well as install ISOs
+
+<!--
+![Redhat Download Page](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-15%2010-38-30.png)
+
+When downloading media we remember how important it is to check the integrity of the file and server it is coming from. Take a moment to check an SSL/TLS Cert from a page you are downloading. Modern browsers have made is very easy to identify when something is not correct, using the cert you can track back the trust tree to the issuer of the cert and decide how much you trust them. Recall cert authorities can not always (and maybe should never) be trusted. A great reference for this is the [DigiNotar hack](https://threatpost.com/final-report-diginotar-hack-shows-total-compromise-ca-servers-103112/77170/) in 2011. Lets take a moment to check the hash on the RedHat image with the ISO checksum below (also called a digest): 
+
+SHA-256 Checksum: 643e706cf7db9e93e706637af92d80eb58377dd0c64ac1e9ce6a72700aa04c2a
+
+In order to test this checksum you need to use the following command:
+
+### Linux (Terminal)
+[How To](https://help.ubuntu.com/community/HowToSHA256SUM)
+`sha256sum <<filename>>`
+
+### Windows (Powershell)
+[How To](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7)
+`Get-FileHash <<C:\filepath\filename>> -Algorithm SHA256 | Format-List`
+
+-->
+
+## The Principle of Least Privilege
+
+* The concept that anyone should only have the minimum level of privilege need to do job
+* Why do nice cars have valet keys?
+* This concept applied to individuals and servers
+
+<!--
+The idea of least privilege is a very simple one. One does not get more privileges then needed to do the function they are required to do. The issue with this is that most business are not capable of identifying the specific workflow that an employee needs to accomplish in a given year let alone day to day. For example, one would assume that an individual working in the finance department would need access to the web application for reporting daily returns. This user would simply need a web browser capable of accessing one website. This is very easy to lock down. Now we take into account that this individual needs email to communicate with peers and stakeholders. If this individual gets input from others they will most likely provide it via email, possibly as attachments. Other individual from an external partner will then create a spreadsheet to tabulate all the data needed for the reporting. To make life easier this spreadsheet has some macros that enable the spreadsheet to auto-magically make adjustments to the number and format pretty graphs.
+
+As you can see we have gone from a simple system that is easy to lock down to a complex vendor locked system that enables one of the primary vectors for compromise in Microsoft Office Macros. For that reason security is as much a leadership effort as it is a technical effort. Leadership needs to have vision enough to rebuild the way individuals think of business to model it around the idea that information systems need to be only as functional as absolutely needed, no more. In life you usually get to choose two of three options:
+
+Fast -- Good -- Cheap
+
+You can't get all three. By being leadership you may have the opportunity to impart change in an organization where you can streamline process to keep the tool chain to a minimum. Simple things are always easier to defend. The fewer items in a tool chain the more time and effort you can spend securing each part, and proportionally, the less it will cost.
+-->
+
+## Keep it simple
+
+* Seems to be limited to the *nix community
+* The less you understand the more difficult to protect
+* If you don't know, you will give more than you should
+
+<!--
+Using the example above you can imagine how much easier it would be if the finance role was limited to simple input into a web browser. The moment we added email and attachments and proprietary technology "standards" we started adding complexity. Complexity is the enemy of security. Sadly we have come to expect functionally and the way we have created this functionality is with tools that are rarely the best at anything but can do just about anything, enter the office suite of software. Behind this movement we have then needed to make workflows around it, like email attachments and file shares and jump drives. All these things open doors to an attacker to take advantage of the most vulnerable part of your information system, your user. Think of your user like a newborn baby, they need to be protected and don't always understand what is best for them. They also very often know exactly what they want and know the best way to get it when they want it. The war with complexity will continue, living simply is one way to move forward and setting expectations to that end. 
+
+* simplicity always will be more secure than complexity
+* complexity is difficult to secure
+* proprietary stacks allow convenience but limit control working in complexity
+
+-->
+
+## Compartmentalize
+
+* Don't put your eggs in one basket
+* Segment systems where possible
+
+<!--
+Take a moment to look back to **Lab 1** where you added two users to your system. You have one user cred and one admin cred. Between the two creds you can imagine what each one is for. One for day to day tasks like email and web browsing. The other for administering systems. As can be imagined, it is not good to use one for the other. It is even better to segment the systems you use for administration. By having separate credentials and separate systems and networks that you can administer from you expand the principal of lease privilege beyond simple workstation configuration to the entire network. Should you be able to manage volumes on your storage server with your normal desktop? Should you be able to log into your virtualization environment from your cell phone? Separate out these tasks and make sure you have added logical and physical controls. This is the idea behind putting your web-servers in a DMZ of your network. 
+
+You can continue the idea of compartmentalization to network [microsegmentation](https://www.darkreading.com/edge/theedge/a-beginners-guide-to-microsegmentation/b/d-id/1335849) and ending with the idea of ["Zero Trust Networks"](https://cloud.google.com/beyondcorp/#researchPapers)
+-->
+
+## Authentication
+
+* How strong are passwords?
+![Passwords](https://cga.sfo2.digitaloceanspaces.com/cns/images/image.png)
+
+<!--
+The idea behind placing restrictions on password length is to increase the number of guesses a brute force attacker may have to make. As you add to the minimum password length, you dramatically increase the potential combinations and make a brute force attack more difficult. For instance, let’s assume that you only have passwords that are made up of lowercase letters in the alphabet. Here are the total number of password combinations for a few different password lengths:
+
+* 4 characters: 456,976 combinations 
+* 5 characters: 11.8 million combinations 
+* 6 characters: 308.9 million combinations 
+* 7 characters: 8 billion combinations 
+* 8 characters: 200 billion combinations combinations 
+* 12 characters: 95 quadrillion combinations 
+
+As you can see, even increasing the minimum password length by one character dramatically increases the number of combinations. Based on this list, you might think that even a 6-character password might be good enough. But a brute force attacker who can do a million guesses per second could crack a 6-character password in 5 minutes or an 8-character password in 2.5 days—but it would take them 3,026 years to go through all of the combinations of a 12-character password. This, by the way, is why attackers are far more likely to use a
+
+Password Complexity Another approach to make brute force attacks more difficult is imposing password complexity restrictions. This means that instead of just allowing any 8-character password, for instance, you require that the password contains both letters and at least one number, or a mixture of uppercase and lowercase letters or even basic punctuation. By requiring extra classes of characters in a password, you increase the total number of combinations for a particular length of password. Let’s take the common 8-character password as an example. Here are the number of total password combinations for 8-character passwords with different password complexity requirements:
+
+* All lowercase—26 characters: 200 billion combinations 
+* Lowercase and uppercase—52 characters: 53 trillion combinations 
+* Lowercase, uppercase, and numbers—62 characters: 218 trillion 
+* Lowercase, uppercase, numbers, and symbols—96 characters: 7.2 quadrillion
+-->
+
+## Password Rotation
+
+* Does it work?
+
+## Password Rotation
+
+* Attackers are Fast
+* Rotated Passwords are guessable
+* Foster bad habits
+
+<!--
+
+-->
+
+## Meet the passphrase
+
+* How do you have high password entropy but still remember it?
+
+## Lets get down to hardening
+
+* We are going to explore automated hardening of CentOS
+* We will be using Ansible Hardening
+
+<!--
+Lets get CentOS going with Vagrant, install Ansible and Git, clone the repo Ansible Hardening and put together a baseline config:
+
+Start in Powershell
+
+```powershell
+mkdir class2
+cd class2
+vagrant init geerlingguy/centos7
+vagrant up
+```
+
+Next lets ssh into the server still from vagrant in the powershell. This is a way to remote into a Linux Server from the command line, to the command line.
+
+```powershell
+vagrant ssh
+```
+
+The first thing we need to do is setup a key-pair to login to ourselves... yep we are running this locally
+
+```bash
+ssh-keygen
+```
+
+You will need to hit enter a few times, don't bother entering a password for the key. Next we will copy key to our trusted hosts file:
+
+```bash
+ssh-copy-id vagrant@localhost
+```
+
+You will need to accept that you are adding this computer your VM, to the accepted hosts to login to.
+
+Now being in bash we will start installing the necessary software onto the system and clone the repository:
+
+```bash
+sudo yum install ansible git
+git clone https://github.com/openstack/ansible-hardening.git
+echo -e "---\n- name: Harden CentOS\n  hosts: all\n  become: yes\n  ignore_errors: yes\n  vars:\n    stig_version: rhel7\n  roles:\n    - role: ansible-hardening" > playbook.yml
+echo -e "[local]\nlocalhost" > inventory
+```
+
+At this point we are ready to run the hardening automation but what are we running?  Lets take a look at all the parameters we can change, they can be found in the repo at [/defaults/main.yml](https://github.com/openstack/ansible-hardening/blob/master/defaults/main.yml):
+```yaml
+---
+# Copyright 2015, Rackspace US, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+## STIG version selection
+# The RHEL 7 STIG content first appeared in the Ocata release and is compatible
+# with the following operating systems:
+#
+#  * CentOS 7
+#  * Debian Jessie
+#  * Fedora 27
+#  * openSUSE Leap 42.x
+#  * SUSE Linux Enterprise 12
+#  * Ubuntu 16.04 Xenial LTS
+#
+# Valid options: rhel7
+stig_version: rhel7
+
+## APT Cache Options
+# This variable is used across multiple OpenStack-Ansible roles to handle the
+# apt cache updates as efficiently as possible.
+cache_timeout: 600
+
+# Set the package install state for distribution packages
+# Options are 'present' and 'latest'
+security_package_state: present
+
+## EPEL
+# Set the following variable to `no` to prevent the EPEL repository from being
+# installed by the role. This may prevent certain packages from installing,
+# such as ClamAV.
+security_epel_install_repository: yes
+#
+# Some deployers install a customized EPEL package that redirects servers to
+# their internal EPEL mirrors. Provide the name of the EPEL repository package
+# (epel-release by default on CentOS) or a URL to an EPEL release RPM file.
+security_epel_release_package: epel-release
+
+###############################################################################
+#  ____  _   _ _____ _       _____   ____ _____ ___ ____
+# |  _ \| | | | ____| |     |___  | / ___|_   _|_ _/ ___|
+# | |_) | |_| |  _| | |        / /  \___ \ | |  | | |  _
+# |  _ <|  _  | |___| |___    / /    ___) || |  | | |_| |
+# |_| \_\_| |_|_____|_____|  /_/    |____/ |_| |___\____|
+#
+# The following options are specific to the RHEL 7 STIG. For details on each
+# option, refer to the ansible-hardening documentation:
+#
+#   https://docs.openstack.org/ansible-hardening/latest/domains.html
+#
+###############################################################################
+
+## Accounts (accounts)
+# Set minimum password lifetime to 1 day for interactive accounts.
+security_set_minimum_password_lifetime: no                   # V-71927
+security_set_maximum_password_lifetime: no                   # V-71931
+
+## AIDE (aide)
+# Initialize the AIDE database immediately (may take time).
+security_rhel7_initialize_aide: no                           # V-71973
+
+# The default Ubuntu configuration for AIDE will cause it to wander into some
+# terrible places on the system, such as /var/lib/lxc and images in /opt.
+# The following three default exclusions are highly recommended for AIDE to
+# work properly, but additional exclusions can be added to this list if needed.
+security_aide_exclude_dirs:
+  - /openstack
+  - /opt
+  - /run
+  - /var
+
+## Audit daemon (auditd)
+# Send audit records to a different system using audisp.
+# security_audisp_remote_server: '10.0.21.1'                  # V-72083
+# Encrypt audit records when they are transmitted over the network.
+# security_audisp_enable_krb5: yes                            # V-72085
+# Set the auditd failure flag. WARNING: READ DOCUMENTATION BEFORE CHANGING!
+security_rhel7_audit_failure_flag: 1                         # V-72081
+# Set the action to take when the disk is full or network events cannot be sent.
+security_rhel7_auditd_disk_full_action: syslog               # V-72087
+security_rhel7_auditd_network_failure_action: syslog         # V-72087
+# Size of remaining disk space (in MB) that triggers alerts.
+security_rhel7_auditd_space_left: "{{ (ansible_mounts | selectattr('mount', 'equalto', '/') | map(attribute='size_total') | first * 0.25 / 1024 / 1024) | int }}" # V-72089
+# Action to take when the space_left threshold is reached.
+security_rhel7_auditd_space_left_action: email               # V-72091
+# Send auditd email alerts to this user.
+security_rhel7_auditd_action_mail_acct: root                 # V-72093
+# Add audit rules for commands/syscalls.
+security_rhel7_audit_chsh: yes                               # V-72167
+security_rhel7_audit_chage: yes                              # V-72155
+security_rhel7_audit_chcon: yes                              # V-72139
+security_rhel7_audit_chmod: no                               # V-72105
+security_rhel7_audit_chown: no                               # V-72097
+security_rhel7_audit_creat: yes                              # V-72123
+security_rhel7_audit_crontab: yes                            # V-72183
+security_rhel7_audit_delete_module: yes                      # V-72189
+security_rhel7_audit_fchmod: no                              # V-72107
+security_rhel7_audit_fchmodat: no                            # V-72109
+security_rhel7_audit_fchown: no                              # V-72099
+security_rhel7_audit_fchownat: no                            # V-72103
+security_rhel7_audit_fremovexattr: no                        # V-72119
+security_rhel7_audit_fsetxattr: no                           # V-72113
+security_rhel7_audit_ftruncate: yes                          # V-72133
+security_rhel7_audit_init_module: yes                        # V-72187
+security_rhel7_audit_gpasswd: yes                            # V-72153
+security_rhel7_audit_lchown: no                              # V-72101
+security_rhel7_audit_lremovexattr: no                        # V-72121
+security_rhel7_audit_lsetxattr: no                           # V-72115
+security_rhel7_audit_mount: yes                              # V-72171
+security_rhel7_audit_newgrp: yes                             # V-72165
+security_rhel7_audit_open: yes                               # V-72125
+security_rhel7_audit_openat: yes                             # V-72127
+security_rhel7_audit_open_by_handle_at: yes                  # V-72129
+security_rhel7_audit_pam_timestamp_check: yes                # V-72185
+security_rhel7_audit_passwd: yes                             # V-72149
+security_rhel7_audit_postdrop: yes                           # V-72175
+security_rhel7_audit_postqueue: yes                          # V-72177
+security_rhel7_audit_removexattr: no                         # V-72117
+security_rhel7_audit_rename: yes                             # V-72199
+security_rhel7_audit_renameat: yes                           # V-72201
+security_rhel7_audit_restorecon: yes                         # V-72141
+security_rhel7_audit_rmdir: yes                              # V-72203
+security_rhel7_audit_semanage: yes                           # V-72135
+security_rhel7_audit_setsebool: yes                          # V-72137
+security_rhel7_audit_setxattr: no                            # V-72111
+security_rhel7_audit_ssh_keysign: yes                        # V-72179
+security_rhel7_audit_su: yes                                 # V-72159
+security_rhel7_audit_sudo: yes                               # V-72161
+security_rhel7_audit_sudoedit: yes                           # V-72169
+security_rhel7_audit_truncate: yes                           # V-72131
+security_rhel7_audit_umount: yes                             # V-72173
+security_rhel7_audit_unix_chkpwd: yes                        # V-72151
+security_rhel7_audit_unlink: yes                             # V-72205
+security_rhel7_audit_unlinkat: yes                           # V-72207
+security_rhel7_audit_userhelper: yes                         # V-72157
+# Add audit rules for other events.
+security_rhel7_audit_account_access: yes                     # V-72143
+security_rhel7_audit_sudo_config_changes: yes                # V-72163
+security_rhel7_audit_insmod: yes                             # V-72191
+security_rhel7_audit_rmmod: yes                              # V-72193
+security_rhel7_audit_modprobe: yes                           # V-72195
+security_rhel7_audit_account_actions: yes                    # V-72197
+
+## Authentication (auth)
+# Check if sudoers has the NOPASSWD rule enabled
+security_sudoers_nopasswd_check_enable: yes
+
+# Disallow logins from accounts with blank/null passwords via PAM.
+security_disallow_blank_password_login: yes                  # V-71937
+# Apply password quality rules.
+# NOTE: The security_pwquality_apply_rules variable is a "master switch".
+# Set the 'security_pwquality_apply_rules' variable to 'yes' to apply all of
+# the password quality rules. Each rule can be disabled with a value of 'no'.
+security_pwquality_apply_rules: no
+security_pwquality_require_uppercase: yes                    # V-71903
+security_pwquality_require_lowercase: yes                    # V-71905
+security_pwquality_require_numeric: yes                      # V-71907
+security_pwquality_require_special: yes                      # V-71909
+security_pwquality_require_characters_changed: yes           # V-71911
+security_pwquality_require_character_classes_changed: yes    # V-71913
+security_pwquality_limit_repeated_characters: yes            # V-71915
+security_pwquality_limit_repeated_character_classes: yes     # V-71917
+security_pwquality_require_minimum_password_length: no       # V-71935
+# Use pwquality when passwords are changed or established.
+security_enable_pwquality_password_set: no                   # V-73159
+# Ensure passwords are stored using SHA512.
+security_password_encrypt_method: SHA512                     # V-71921
+# Ensure user/group admin utilities only store encrypted passwords.
+security_libuser_crypt_style_sha512: yes                     # V-71923
+# Set a minimum/maximum lifetime limit for user passwords.
+# security_password_min_lifetime_days: 1                      # V-71925
+# security_password_max_lifetime_days: 60                     # V-71929
+# Set a delay (in seconds) between failed login attempts.
+security_shadow_utils_fail_delay: 4                          # V-71951
+# Set a umask for all authenticated users.
+# security_shadow_utils_umask: '077'                         # V-71995
+# Create home directories for new users by default.
+security_shadow_utils_create_home: yes                       # V-72013
+# How many old user password to remember to prevent password re-use.
+# security_password_remember_password: 5                      # V-71933
+# Disable user accounts if the password expires.
+security_disable_account_if_password_expires: no             # V-71941
+# Lock user accounts with excessive login failures. See documentation.
+security_pam_faillock_enable: no                             # V-71945 / V-71943 / RHEL-07-010373
+security_pam_faillock_interval: 900
+security_pam_faillock_attempts: 3
+security_pam_faillock_deny_root: yes                         # RHEL-07-010373
+security_pam_faillock_unlock_time: 604800                    # V-71943
+# Limit the number of concurrent connections per account.
+# security_rhel7_concurrent_session_limit: 10                 # V-72217
+# Remove .shosts and shosts.equiv files.
+security_rhel7_remove_shosts_files: no                       # V-72277
+
+## File permissions (file_perms)
+# Reset file permissions and ownership for files installed via RPM packages.
+security_reset_perm_ownership: no                            # V-71849
+# Search for files/directories owned by invalid users or groups.
+security_search_for_invalid_owner: no                        # V-72007
+security_search_for_invalid_group_owner: no                  # V-72009
+# Set user/group owners on each home directory and set mode to 0750.
+security_set_home_directory_permissions_and_owners: no       # V-72017 / V-72019 / V-72021
+# Find all world-writable directories and display them.
+security_find_world_writable_dirs: no                        # V-72047
+
+## Graphical interfaces (graphical)
+# Disable automatic gdm logins
+security_disable_gdm_automatic_login: yes                    # V-71953
+# Disable timed gdm logins for guests
+security_disable_gdm_timed_login: yes                        # V-71955
+# Enable session locking for graphical logins.
+security_lock_session: no                                    # V-71891
+# Set a timer (in seconds) when an inactive session is locked.
+security_lock_session_inactive_delay: 900                    # V-71893
+# Prevent users from modifying session lock settings.
+security_lock_session_override_user: yes                     # RHEL-07-010071
+# Lock a session (start screensaver) when a session is inactive.
+security_lock_session_when_inactive: yes                     # V-71893
+# Time after screensaver starts when user login is required.
+security_lock_session_screensaver_lock_delay: 5              # V-71901
+# Enable a login banner and set the text for the banner.
+security_enable_graphical_login_message: yes                 # V-71859
+security_enable_graphical_login_message_text: >
+    You are accessing a secured system and your actions will be logged along
+    with identifying information. Disconnect immediately if you are not an
+    authorized user of this system.
+## Linux Security Module (lsm)
+# Enable SELinux on Red Hat/CentOS and AppArmor on Ubuntu.
+security_rhel7_enable_linux_security_module: yes             # V-71989 / V-71991
+
+## Miscellaneous (misc)
+# Disable the autofs service.
+security_rhel7_disable_autofs: yes                           # V-71985
+# Enable virus scanning with clamav
+security_enable_virus_scanner: no                            # V-72213
+# Run the virus scanner update during the deployment (if scanner is deployed)
+security_run_virus_scanner_update: yes
+# Disable ctrl-alt-delete key sequence on the console.
+security_rhel7_disable_ctrl_alt_delete: yes                  # V-71993
+# Install and enable firewalld for iptables management.
+security_enable_firewalld: no                                # V-72273
+# Rate limit TCP connections to 25/min and burstable to 100.
+security_enable_firewalld_rate_limit: no                     # V-72271
+security_enable_firewalld_rate_limit_per_minute: 25
+security_enable_firewalld_rate_limit_burst: 100
+# Update the grub configuration.
+security_enable_grub_update: yes
+# Require authentication in GRUB to boot into single-user or maintenance modes.
+security_require_grub_authentication: no                     # V-71961 / V-71963
+# The default password for grub authentication is 'secrete'.
+security_grub_password_hash: grub.pbkdf2.sha512.10000.7B21785BEAFEE3AC71459D8210E3FB42EC0F5011C24A2DF31A8127D43A0BB4F1563549DF443791BE8EDA3AE4E4D4E04DB78D4CA35320E4C646CF38320CBE16EC.4B46176AAB1405D97BADB696377C29DE3B3266188D9C3D2E57F3AE851815CCBC16A275B0DBF6F79D738DAD8F598BEE64C73AE35F19A28C5D1E7C7D96FF8A739B
+# Set session timeout.
+security_rhel7_session_timeout: 600                          # V-72223
+# Enable chrony for NTP time synchronization.
+security_rhel7_enable_chrony: yes                            # V-72269
+# Use the following NTP servers.
+security_ntp_servers:
+  - 0.pool.ntp.org
+  - 1.pool.ntp.org
+  - 2.pool.ntp.org
+  - 3.pool.ntp.org
+# NTP server options.
+security_ntp_server_options: iburst
+# Configure Chrony to synchronize the hardware clock
+security_ntp_sync_rtc: false
+# Chrony limits access to clients that are on certain subnets.  Adjust the
+# following subnets here to limit client access to chrony servers.
+security_allowed_ntp_subnets:
+  - 10/8
+  - 192.168/16
+  - 172.16/12
+# Listen for NTP requests only on local interfaces.
+security_ntp_bind_local_interfaces_only: yes
+# Restrict mail relaying.
+security_rhel7_restrict_mail_relaying: yes                   # V-72297
+# Deploy a login banner.                                     # V-72225 / V-71863
+security_login_banner_text: |
+  ------------------------------------------------------------------------------
+  * WARNING                                                                    *
+  * You are accessing a secured system and your actions will be logged along   *
+  * with identifying information. Disconnect immediately if you are not an     *
+  * authorized user of this system.                                            *
+  ------------------------------------------------------------------------------
+## Packages (packages)
+# Remove packages from the system as required by the STIG. Set any of these
+# to 'no' to skip their removal.
+security_rhel7_remove_rsh_server: yes                        # V-71967
+security_rhel7_remove_telnet_server: yes                     # V-72077
+security_rhel7_remove_tftp_server: yes                       # V-72301
+security_rhel7_remove_xorg: yes                              # V-72307
+security_rhel7_remove_ypserv: yes                            # V-71969
+# Automatically remove dependencies when removing packages.
+security_package_clean_on_remove: no                         # V-71987
+# Automatically update packages.
+security_rhel7_automatic_package_updates: no                 # V-71999
+# Install packages for multi-factor authentication.
+security_install_multifactor_auth_packages: yes              # V-72417
+security_check_package_checksums: no                         # V-71855
+
+## RPM (rpm)
+# Enable GPG checks for packages and repository data.
+security_enable_gpgcheck_packages: yes                       # V-71977
+security_enable_gpgcheck_packages_local: yes                 # V-71979
+security_enable_gpgcheck_repo: no                            # V-71981
+
+## ssh server (sshd)
+# Ensure sshd is running and enabled at boot time.
+security_enable_sshd: yes                                    # V-72235
+# Disallow logins from users with empty/null passwords.
+security_sshd_disallow_empty_password: yes                   # V-71939 / RHEL-07-010440
+# Disallow users from overriding the ssh environment variables.
+security_sshd_disallow_environment_override: yes             # V-71957
+# Disallow host based authentication.
+security_sshd_disallow_host_based_auth: yes                  # V-71959
+# Set a list of allowed ssh ciphers.
+security_sshd_cipher_list: 'aes128-ctr,aes192-ctr,aes256-ctr' # V-72221
+# Specify a text file to be displayed as the banner/MOTD for all sessions.
+security_sshd_banner_file: /etc/motd                         # V-71861 / V-72225
+# Set the interval for max session length and the number of intervals to allow.
+security_sshd_client_alive_interval: 600                     # V-72237
+security_sshd_client_alive_count_max: 0                      # V-72241
+# Print the last login for a user when they log in over ssh.
+security_sshd_print_last_log: yes                            # V-72245
+# Permit direct root logins ('yes', 'no', 'without-password', 'prohibit-password', 'forced-commands-only')
+security_sshd_permit_root_login: no                          # V-72247
+# Disallow authentication using known hosts authentication.
+security_sshd_disallow_known_hosts_auth: yes                 # V-72249 / V-72239
+# Disallow rhosts authentication.
+security_sshd_disallow_rhosts_auth: yes                      # V-72243
+# Enable X11 forwarding.
+security_sshd_enable_x11_forwarding: yes                     # V-72303
+# Set the allowed ssh protocols.
+security_sshd_protocol: 2                                    # V-72251
+# Set the list of allowed Message Authentication Codes (MACs) for ssh.
+security_sshd_allowed_macs: 'hmac-sha2-256,hmac-sha2-512'    # V-72253
+# Disallow Generic Security Service Application Program Interface (GSSAPI) auth.
+security_sshd_disallow_gssapi: yes                           # V-72259
+# Disallow compression or delay after login.
+security_sshd_compression: 'delayed'                         # V-72267
+# Require privilege separation at every opportunity.
+security_sshd_enable_privilege_separation: yes               # V-72265
+# Require strict mode checking of home directory configuration files.
+security_sshd_enable_strict_modes: yes                       # V-72263
+# Disallow Kerberos authentication.
+security_sshd_disable_kerberos_auth: yes                     # V-72261
+
+## Kernel settings (kernel)
+# Disallow forwarding IPv4/IPv6 source routed packets on all interfaces
+# immediately and by default on new interfaces.
+security_disallow_source_routed_packet_forward_ipv4: yes     # V-72283 / V-72285
+security_disallow_source_routed_packet_forward_ipv6: yes     # V-72319
+# Disallow responses to IPv4 ICMP echoes sent to broadcast address.
+security_disallow_echoes_broadcast_address: yes              # V-72287
+# Disallow IPV4 ICMP redirects on all interfaces immediately and by default on
+# new interfaces.
+security_disallow_icmp_redirects: yes                        # V-73175 / V-72289 / V-72291 / V-72293
+# Disallow IP forwarding.
+security_disallow_ip_forwarding: no                          # V-72309
+# Disable USB storage support.
+security_rhel7_disable_usb_storage: yes                      # V-71983
+# Disable kdump.
+security_disable_kdump: yes                                  # V-72057
+# Disable Datagram Congestion Control Protocol (DCCP).
+security_rhel7_disable_dccp: yes                             # V-77821
+# Enable Address Space Layout Randomization (ASLR).
+security_enable_aslr: yes                                    # V-77825
+
+###############################################################################
+#   ____            _        _ _
+#  / ___|___  _ __ | |_ _ __(_) |__
+# | |   / _ \| '_ \| __| '__| | '_ \
+# | |__| (_) | | | | |_| |  | | |_) |
+#  \____\___/|_| |_|\__|_|  |_|_.__/
+#
+#
+# The following configurations apply to tasks that are contributed by
+# ansible-hardening developers and may not be part of a hardening standard
+# or compliance program. For more information on the 'contrib' tasks, review
+# the documentation:
+#
+#   https://docs.openstack.org/ansible-hardening/latest/contrib.html
+#
+###############################################################################
+
+# To enable the contrib tasks, set this variable to 'yes'.
+security_contrib_enabled: no
+
+# Disable IPv6.
+# DANGER: This option causes IPv6 networking to be disabled for the ENTIRE
+# DANGER: SYSTEM. This will cause downtime for any services that depend on
+# DANGER: IPv6 network connectivity.
+security_contrib_disable_ipv6: no                            # C-00001
+```
+
+As you can imagine there are LOTS of controls you can implement. You can also notice that there are the vuln ID numbers we saw in the STIG! We will just take the baseline settings and run them with the following:
+
+```bash
+ansible-playbook -i inventory playbook.yml
+```
