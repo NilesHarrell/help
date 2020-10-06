@@ -3111,3 +3111,303 @@ In a stateless packet filtering firewall, the firewall is looking at packets and
 
 The stateless packet filter firewall has an application in being able to set out simple rules to help control the flow of packets around the network. As we saw in the above example you can very easily limit the flow of information to and from servers. There are, however, some drawbacks. I have often heard that "we need to block these countries because that is where the attackers are". This is something a stateless packet filtering firewall can absolutely do. Block all addresses from England or Greece... No problem, the only issue is the Greek hacker knows that no one trusts the Greeks and thus spends $5/month (or 45000 Drachma an hour) on a virtual private server in Chicago to launch her attack from. Additionally, if the attacker was an application layer attack like a Cross Site Scripting or buffer overflow you can imagine that the Stateless Packet Fileting system would not work well. So we can see the uses and drawbacks to this type of firewall. Next class we will go over stateful packet filtering, application firewalls and proxy firewalls. 
 
+# Class 15 Firewalls
+## Definitions
+
+* SOCKS -- Sockets Circuit Level Gateway
+* NIC -- Network Interface Card
+* LKM -- Loadable Kernel Modules
+## References
+
+* Wu/Irwin 18.4 - 18.14
+
+## TCP Flags
+
+* Stateless Packet Filters can allow a TCP connection from outside in
+* But can block a TCP connection from inside out
+* Allowing the SYN ACK packets to return but blocking an external SYN packet
+
+
+Before we move onto stateful packet inspection it is important to note that it is not all external packets that are blocked by a firewall using stateless inspection. Imagine you send a SYN packet out to establish a TCP connection. If you blocked all external packets you would never be able to establish a connection. So the firewall needs to allow SYN ACK packages. This is accomplished by the firewall keeping track of TCP flags. This enables the firewall to block all outside SYN packets to protect an external entity establishing a connection into the network.
+
+
+## Types of Firewalls
+
+| Type              | Security | Computation | UDP/ICMP Capability   |
+|-------------------|----------|-------------|-----------------------|
+| Stateless Filter  | 3        | 1           | Yes                   |
+| Stateful Filter   | 2        | 2           | Yes                   |
+| Circuit-Level     | 2        | 3           | Yes (SOCKS v5)        |
+| Application-Level | 1        | 4           | Application Dependent |
+
+## Stateful Packet Inspection
+
+* Monitors sessions (tracks packets across a session)
+* Low overhead and high throughput
+* The filtering rules (ACL) has the same format as stateless filtering
+
+## Network Address Translation
+
+* Firewalls/NAT devices provide Network Address Translation (NAT) to exchange private IPs and ports
+* Keeps track of table of connections and translations in NAT Translation Table
+
+## Application-Level Gateway
+
+* Proxy Filters are an example of an Application-Level Gateway
+* Acts like a Man in the Middle (a good one)
+* Inspects traffic content
+* Can block malware in connections
+
+
+The best way to think of this feature of firewalls is to start considering a packet filtering firewall. With that we have three modes we can operate in:
+
+* Allow
+* Deny
+* Forward
+
+I think we have thoroughly considered the first two, Allow and Deny. The forward option enables us to utilize any of the filtering options from a packet filtering firewall and forward those packets to something that can make a decision on the topic. For example, if we have a remote connection that we want the application proxy to adjudicate. We know that this connection is coming from a static IP we can simply tell the packet filtering firewall to forward that traffic to an application that can decide to allow or deny the traffic based on what is occurring within that application. That could be authentication or acceptance of some parameter like a specific message format (JSON, SQL etc etc). An example of this would be something like a captured portal or a "human test" where you pick all the traffic lights from bingo boxes of small photos. It is a way to transparently proxy traffic for a purpose. 
+
+
+## Circuit-Level Gateway
+
+* Support more services than Application-level Gateway
+  * Less control over data
+* Hard to handle protocols like FTP
+* Clients must be aware they are using a circuit-level proxy
+* Protect against fragmentation problem
+* SOCKS is an Internet protocol that allows client-server applications to transparently use the services of a network firewall
+
+## Circuit-Level Gateway
+
+* Inspects and relays TCP/UDP/ICMP
+  * Based on the state (session) for filtering
+  * Authentication provides the basis for filtering
+  * Does not inspect the contents of segments
+  * Weaker than application-level gateway
+  * Faster than application-level gateway
+* Combined proxy: for lower overhead
+  * Application-level proxy on inbound for protecting critical servers
+  * Circuit-level on outbound (trusted users)
+
+## SOCKS
+
+* SOCKS is short for Sockets (SOCKetS)
+* An example of a Circuit-Level Gateway
+* Works at **Session Layer** of OSI model (Above Transport Layer)
+* Similar to Stateful but works as a proxy
+* SOCKS v5 is defined in RFC 1928
+
+## SOCKS
+
+* Clients, behind a firewall, need to access exterior servers
+  * Connect to a SOCKS proxy server
+  * Perform authentication
+* Proxy server
+  * Controls the eligibility of the client to access the external server using access control list
+  * Passes the request on to the server if the request is allowed
+* SOCKS can also be used in the opposite direction
+  * Allowing the clients outside the firewall ("exterior clients") to connect to servers inside the firewall (internal servers)
+  * Based on access control list
+
+## Building a Firewall 
+
+* In order to filter packets we need to look at packet header info
+* Thinking of your levels, in the **Userspace** do we have access to this?
+* In Linux this is done with `netfilter`
+
+
+
+When we think about what we would need to do to make a firewall from scratch (well kinda from scratch, really from Linux) we will need access to the raw packet information to be able to make some sort of decision. We know that the operating system is responsible for connecting applications with hardware, in this case the Network Interface Card (NIC). The NIC will have packets come in and the OS Kernel decides what to do with them. Generally, it will strip off the headers and provide the payload to the application layer. So to get to the packets you need to plug yourself into the kernel. Years ago in order to do this we need to add our code into the kernel and then recompile it in order to run the code. This is no longer the case in Linux because we have Loadable Kernel Modules (LKM). 
+
+
+
+## Introduce `netfilter`
+
+![netfilter](https://cga.sfo2.digitaloceanspaces.com/cns/images/netfilter.png)
+
+
+To start using `netfilter` we need to utilize LKM. To show this we can startup a linux based VM and provide the following code to exibit a Loadable Kernel Module :
+
+```c
+
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+
+static int kmodule_init(void) {
+        printk(KERN_INFO "Initializing this module\n");
+        return 0;
+}
+
+static void kmodule_exit(void) {
+        printk(KERN_INFO "Module cleanup\n");
+}
+
+module_init(kmodule_init);       
+module_exit(kmodule_exit);      
+
+MODULE_LICENSE("GPL");
+```
+
+with the following make file:
+
+```c
+
+obj-m += kMod.o
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+```
+
+```bash
+
+sudo insmod kMod.ko
+lsmod | grep kMod
+
+# remove kernel modules
+sudo rmmod kMod
+
+# show the kernel message
+dmesg
+
+```
+
+
+
+## `netfilter` Return Values
+
+* NF_ACCEPT: Let the packet flow through the stack.
+* NF_DROP: Discard the packet.
+* NF_QUEUE: Pass the packet to the user space via nf_queue facility.
+* NF_STOLEN: Inform the netfilter to forget about this packet, The packet is further processed by the module.
+* NF_REPEAT: Request the netfilter to call this module again.
+
+## `netfilter` Hooks
+
+* NF_IP_LOCAL_OUT: Before the packets are in their way out of the host.
+* NF_IP_POST_ROUTING: After the packets are out of the host and entering a different network.
+* NF_IP_PRE_ROUTING: Before any routing decision is made
+* NF_IP_LOCAL_IN: Before being sent to the network stack
+* NF_IP_FORWARD: Forward packets to other hosts.
+
+## Simple Firewall
+
+* Block telnet -- port 23
+
+![netfilter](https://cga.sfo2.digitaloceanspaces.com/cns/images/netfilter.png)
+
+
+
+```c
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/netfilter.h>
+#include <linux/netfilter_ipv4.h>
+#include <linux/ip.h>
+#include <linux/tcp.h>
+
+static struct nf_hook_ops telnetFilterHook;
+
+
+unsigned int telnetFilter(void *priv, struct sk_buff *skb,
+                 const struct nf_hook_state *state)
+{
+  struct iphdr *iph;
+  struct tcphdr *tcph;
+
+  iph = ip_hdr(skb);
+  tcph = (void *)iph+iph->ihl*4;
+
+  if (iph->protocol == IPPROTO_TCP && tcph->dest == htons(23)) {
+    printk(KERN_INFO "Dropping telnet packet to %d.%d.%d.%d\n",
+        ((unsigned char *)&iph->daddr)[0],
+        ((unsigned char *)&iph->daddr)[1],
+        ((unsigned char *)&iph->daddr)[2],
+        ((unsigned char *)&iph->daddr)[3]);
+    return NF_DROP;
+  } else {
+    return NF_ACCEPT;
+  }
+}
+
+
+int setUpFilter(void) {
+        printk(KERN_INFO "Registering a Telnet filter.\n");
+        telnetFilterHook.hook = telnetFilter; 
+        telnetFilterHook.hooknum = NF_INET_POST_ROUTING;
+        telnetFilterHook.pf = PF_INET;
+        telnetFilterHook.priority = NF_IP_PRI_FIRST;
+
+        // Register the hook.
+        nf_register_hook(&telnetFilterHook);
+        return 0;
+}
+
+void removeFilter(void) {
+        printk(KERN_INFO "Telnet filter is being removed.\n");
+        nf_unregister_hook(&telnetFilterHook);
+}
+
+module_init(setUpFilter);
+module_exit(removeFilter);
+
+MODULE_LICENSE("GPL");
+```
+
+
+
+## Telnet Filter
+
+![Telnet Filter](https://cga.sfo2.digitaloceanspaces.com/cns/images/telnet_filter.png)
+
+
+## `iptables` Firewall
+
+* Normally a program in the userspace will develop rules for netfilter
+* Under the hood the same functions are occuring
+
+## Tables and Chains
+
+| Table  | Chain                                       | Function                                          |
+|--------|---------------------------------------------|---------------------------------------------------|
+| filter | INPUT FORWARD OUTPUT                        | Packet Filter                                     |
+| nat    | PREROUTING INPUT OUTPUT POSTROUTING         | Modifying source or destination network addresses |
+| mangle | PREROUTING INPUT FORWARD OUTPUT POSTROUTING | Packet content modification                       |
+
+## `iptables` packet traversal
+
+![Packet Traversal](https://cga.sfo2.digitaloceanspaces.com/cns/images/iptables.png)
+
+## `iptables` Command
+
+```bash
+iptable [-t filter] -A INPUT <rule> -j <target>
+```
+## `iptables` Example 1
+
+Block a specific user
+```bash
+sudo iptables -A OUTPUT -m owner --uid-owner seed -j DROP
+```
+
+## `iptables` Example 2
+
+What does this do?
+
+```bash
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P OUTPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+
+sudo iptables -F
+```
+
+## `iptables` Example 3
+
+```bash
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp -m tcp -j ACCEPT
+```
