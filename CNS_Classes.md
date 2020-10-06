@@ -2771,3 +2771,240 @@ RTT = clock period * (response time - send time) ---- RTT = 10ms * (38 -31) = 7 
 * [Proof Point Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/proof_point2019.pdf)
 * [SANS Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/SANS2019.pdf)
 * [SonicWall Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/sonicwall_2019.pdf)
+
+# Class 13 -- Intro to cyber
+## Definitions
+
+* EPO -- Entry Point Obfuscation
+* PE -- Windows Portable Executable
+* ELF -- Unix/Linux Executable and Linkable Format
+* CVE -- Common Vulnerabilities and Exposures
+## References
+
+* Wu/Irwin 17.1 - 17.11 -- This material is new and needs to be reviewed in entirety.
+* [McAffe Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/mcfee_8_19.pdf)
+* [CrowdStrike Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/crowdstrike2019.pdf)
+* [Carbon Black Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/carbon_black2019.pdf)
+* [Cyber Edge Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/cyber_edge2019.pdf)
+* [Ernst Young Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/EY_2019.pdf)
+* [FireEye Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/fireeye2019.pdf)
+* [Fortigate Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/fortigate.pdf)
+* [NCSC Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/NCSC.pdf)
+* [Proof Point Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/proof_point2019.pdf)
+* [SANS Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/SANS2019.pdf)
+* [SonicWall Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/sonicwall_2019.pdf)
+* [SpamHaus Botnet Threat Report](https://www.deteque.com/app/uploads/2019/02/Spamhaus-Botnet-Threat-Report-2019.pdf)
+
+## Intro to Cyber
+
+* Protecting Confidentiality, Integrity and Availability (CIA)
+* Providing accurate Authentication, Accountability/Non-repudiation and Access Control.
+
+
+When we talk about the basic CIA triad it is can not be overstated that the security engineer needs to have an inate understanding of these items. We add on Authentication which today invovles identifying that the user is infact the person who is authorized. This means using systems that can detect when this is not the case. For example, it is not acceptable to have an individual sign into a system even "With the users permission". Lastly, we need to verify that the events and actions can be linked back to a human user. With Accountability/Non-repudiation we strive to prove that individuals tracks are collected and verifiable. 
+
+
+## Protecting all the layers
+
+* Think about all the layers of security
+* What aspects of each layer need protection?
+
+![Protect the Stack](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-26%2016-25-36.png)
+
+
+* Attacks to OS, applications, hardware, and network equipment vulnerabilities
+  * Malware
+  * Configuration weaknesses
+  * Syntax and semantics weaknesses
+  * Validation weaknesses
+* Attacks to confidentiality
+* Memory scraping
+  * Eavesdropping
+  * Packet sniffing
+* Attacks on integrity
+  * Modify content
+* Attack on Authenticity
+  * Identity theft
+  * Password crack
+  * Phishing attack
+  * DNS attack
+  * Cache poisoning
+* Evasion on security equipment/measures
+  * Mutated attacks
+* Attacks on Availability
+  * Distributed denial of service (DDoS)
+* Social engineering
+
+
+## Malware
+
+* Malicious code often masquerades as part of useful software/message/information
+* Malware exploits existing vulnerabilities on systems making quiet and easy entry
+* Some malicious programs need host programs to hide their tracks
+  * Trojan horses, spyware, viruses, and rootkits
+* Others can exist and propagate independently
+  * Worms, automated viruses and zombies
+
+
+
+## Worms
+
+* A standalone malware program that replicates itself in order to spread to other computers
+* One of the best examples is **Conflicker** [NY Times Article Looking Back](https://www.nytimes.com/2019/06/29/opinion/sunday/conficker-worm-ukraine.html)
+
+
+
+## Phishing
+
+* A method to attack human vector
+* Normally through email but can be via other means
+* Look around, we have all fallen for phishing
+* Famously Robert Muller was phished in 2009 responding to fake bank request
+
+## Trojan
+
+* Software that enables remote access or a backdoor
+* Kids are shortening the name to just Trojan
+* Popular in Remote Access Trojans (RAT)
+* RATs traded on internet (Never trust a webcam)
+
+
+![RAT](https://cga.sfo2.digitaloceanspaces.com/cns/images/download.jpeg)
+
+
+## Botnets
+
+* Network of systems capable of action when given instruction
+* Control through Command and Control servers (C&C or C2)
+* C2 servers are constantly changing and adapting
+
+
+Botnets are contining to be an issue. The dated information in the book can be supplemented with the [2019 SpamHaus Botnet Report](https://www.deteque.com/app/uploads/2019/02/Spamhaus-Botnet-Threat-Report-2019.pdf). 
+
+
+## Rootkit
+
+* A number of low level trojans in a system with a focus on stealth
+* Record user passwords
+
+## User Mode Rootkits
+
+* Hooking the user or application space in such a way that whenever an application makes a system call, the predetermined path of the system’s execution permits a Windows Rootkit to hijack the system call at many points along the path
+* One of the most common user mode techniques is the in-memory modification of system DLLs
+
+## Kernel Mode Rootkits
+
+* As a system call’s execution path leaves user mode and enters kernel mode, it must pass through a gate that prevents the user mode code from accessing kernel mode space
+  * Only the super-user or equivalent process can access the kernel
+  * In older versions of Windows, this gate is accessed via interrupts while in newer versions of Windows this is done via model specific registers (MSRs)
+
+## Master Boot Record (MBR) Rootkit
+
+* Since a MBR rootkit, such as Mebroot, loads prior to anything else and is nearly invisible to security software, once the machine is infected, the hacker controlling the Rootkit has complete control of the victim’s machine
+* Most MBR rootkits can defend itself by disabling all security related updates and patches as well as malware detection functions during PC boot process
+* A more deeply embedded rookit is the BIOS Trojans
+
+## Virus
+
+* Self-replicating code attached to some other code
+  * Biological virus
+* Propagating itself and carries a payload
+  * Carries code to make copies of itself
+  * Modifies the OS or the application’s portable executable (PE) files
+  * Needs to understand how some executables are executed in the operating system
+  * To infect a particular program file, the virus will parse it, copy itself into the program and/or modify the header to get executed whenever the program is executed
+* Performs some covert task
+
+## Virus Phases
+
+* Dormant: waiting for a trigger event
+* Propagation: using exploits for replicating to other host
+* Triggering: by event to execute payload
+* Execution of payload
+* Downloading files and/or executing programs
+
+## CVE
+
+* The CVE vulnerability naming scheme is for a dictionary of unique, common names for publicly known software flaws
+* The MITRE Corporation assigns CVE IDs to publicly known vulnerabilities in commercial and open source software
+* General information on CVE is available at [http://cve.mitre.org/](http://cve.mitre.org/)
+
+## CVE info
+
+* A comprehensive list of publicly known software flaws
+* A globally unique name to identify each vulnerability
+* A basis for discussing both the priorities and risks of vulnerabilities
+* A way for a user of disparate products and services to integrate vulnerability information
+
+## Common Configuration Enumeration
+
+* The CCE version 5 List provides unique identifiers for software security configuration settings  
+* The settings are recommendations for securing an OS or application
+* The MITRE Corporation maintains and publishes the lists of CCE names. The lists, and additional information on CCE, are available at [http://cce.mitre.org/](http://cce.mitre.org/)
+
+## Obfuscation
+
+* Obfuscation techniques are used by malware to avoid detection and analysis
+  * Polymorphism: changing the encryption/decryption routine
+    * The malware employs a very large pool of encryption/decryption routines and are much harder to detect using signatures.
+    * This high number of encryption/decryption routines is delivered through the use of a mutation engine
+  * Metamorphism: changing the virus body but performing the same task
+    * Using equivalent functions (or code)
+    * Changing the sequence of codes
+    * Inserting unneeded functions (or code)
+    * Malware Mutation includes polymorphism and metamorphism
+  * Entry point obfuscation (EPO)
+* The malware can use multiple obfuscation techniques and fragmented call routines to make detection very difficult
+
+
+## Executable Packing/Compression
+
+* Executable packing/compression is also frequently used to deter reverse engineering or to obfuscate the contents of the executable
+  * A software vendor wants to protect their code from reverse engineering, while hackers want to hide the presence of malware from anti-malware scanners through the use of proprietary packing methods and/or added encryption
+  * Executable packing can be used to prevent direct disassembly, mask string literals and modified signatures
+  * Although this does not eliminate the chance for reverse engineering and debugging analysis, it can make the process more difficult and costly
+* An executable packer compresses an executable file and combines the compressed data with the decompression code it needs into a single executable
+
+## Executable Packing Process
+
+* Executing a packed executable transfers control to it
+* Executes the decompression code
+* Unpacks the original executable code
+* Then runs the unpacked code
+
+## Executable Packign Tooling
+
+* UPX supports Windows Protable Executable (PE) file format, DOS executables, and the Executable and Linkable Format (ELF)
+
+## Windows PE file
+
+* PE file is similar to what the module would look like after Windows has loaded it=
+* The Windows loader does not need to work extremely hard to create a process from the disk file
+* The loader uses the memory-mapped file mechanism to map the appropriate pieces of the file into the virtual address space
+* Relative Virtual Address (RVA). Many fields in PE files are specified in terms of RVAs. An RVA is simply the offset of another item, relative to where the file is memory-mapped.
+
+## Windows PE Format
+
+![PE Structure](https://cga.sfo2.digitaloceanspaces.com/cns/images/PE.png)
+
+
+
+## Entry Point Obfuscation (EPO)
+
+This type of malware changes a random location in the host file data instead of changing the headers (PE headers in Windows) or the initial host file data, so that the entry point of the malware is hidden in the host file
+
+* Call hooking: Using a function call routine to get itself executed: aka call hooking
+  * The malware first scans the targeted program code (in .text area of PE) for any function or subroutine calls or for certain APIs -- For example, a relocation table in a PE can be modified to direct control to malware code
+  * It then changes one of the subroutine calls to gain execution control and passes the control to the actual subroutine after execution  
+* Call inserting: Inserting a subroutine call into the host program code
+  * The control is transferred to the malware via an inserted subroutine call that is embedded in the host program code
+  * After the execution is complete, the control is transferred back to the host program
+
+## EPO detection difficulty
+
+* Embedding the call/jump into the malware code deep within a target executable prevents tracing the execution path of an EPO-infected file and provides no guarantee that the virus code itself will ever be called
+* The EPO disables the static detection method of malware, as it removes the ability for a scanner to trace into the virus code with any guarantee
+* In other words, the scanner is unable to detect its exact location in order to emulate it
+* It is also very difficult to clean up an infected host due to the modifications to host programs performed by malware
+
+[Call Hooking](https://en.wikipedia.org/wiki/Hooking)
