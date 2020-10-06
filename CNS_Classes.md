@@ -788,4 +788,292 @@ Additional Control Enhancements are ways to mitigate specific risks to a system.
   [Authentication Management]:https://nvd.nist.gov/800-53/Rev4/control/IA-5
   [FireEYE APT]:https://www.fireeye.com/current-threats/apt-groups.html
   
-  
+  # Class 05 -- STIG/SCAP and Standards
+  ## References
+
+* [SCAP Eye Bleeding PPT from 2000's]
+* [DISA STIG/SRG -- CAC and Public]
+* [Open SCAP]
+* [STIG Viewer]
+* [CCI Reference]
+* [CCI Specification]
+* [Validated SCAP Tools]
+* [Control to CCI mapping]
+* [SCAP Acronyms]
+* [SCAP Word Doc]
+
+## Definitions
+
+* CCI  -- Control Correlation Identifier
+* DISA -- Defense Information Systems Agency
+* STIG -- Security Technical Implementation Guide
+* SRG  -- Security Requirements Guide
+* SCAP -- Security Content Automation Protocol
+
+## Introduction
+
+* The Defense Information Systems Agency (DISA) publishes Security Technical Implementation Guides (STIGs) and Security Requirements Guides (SRGs)
+* STIGs are specific controls used to configure software in a secure manner, a standard
+* Security Requirements Guides (SRG) are more broad and give an overview of what a how to secure a class of items
+
+<!--
+Welcome to the world of security controls. When we ask, What makes a secure system? The answer in the DOD realm is "STIG it". A STIG is a set of specific controls that are used to make a system more secure, a security baseline. STIGs are specific controls for a specific produce and a specific version. General guidelines are known as SRGs and usually will be written for more general applications like "A Firewall" and has some detail outlining what a firewall should or shouldn't have configured but not how to accomplish that objective. A specific firewall may have a STIG associated with it but in the absence of a STIG an SGR can be adapted for different types of systems like network devices or firewalls. For example in the STIG/SRG files provided there is a STIG for the VMware NSX Distributed Firewall but an SRG for any firewall. That SRG could apply to the VMware NSX distributed Firewall but if the STIG is avaliable you should stick with that!
+-->
+
+## Control Correlation Identifier (CCI)
+
+* Serve as a:
+  * Standard identifier
+  * Description for actionable statements
+* Bridge gap between policy documents and specific controls
+
+The the following [Control to CCI mapping] to assist in understanding the progression
+
+<!--
+
+CCIs provide the ability to link policy documents and requirements, like the NIST 800-53 which we will talk about later, to actionable controls like STIGs. The CCI enables an overarching description of the "Control" that can then be applied to various applications which then become Vulns. CCIs tend to lack to details needed for a specific system but enable the SCAP to develop specific controls that can be later used and measured against. If you think about how one would **Correlate** a STIG control accross Operating systems, for example Windows10 to CentOS7, the CCI is how you would do it!
+
+-->
+
+## Security Requirements Guides
+
+* General Guidance for broad categories
+* Provides a methodology for a type of technology
+* Tend to be vendor agnostic
+
+<!--
+As with all things in the government SRGs are derived from a higher level guidance document. That document is the Control Correlation Identifiers (CCIs). The difference is that the SRG provies the control in the lens of the application it is working towards securing. Again take the Firewall we spoke about earlier. The CCI will inform all systems what to do, the SRG will put it in the lens of what to do for a Firewall and the STIG will be the specific settings for a specific piece of hardware. They are used to bridge the gap between CCIs and STIGs where STIGs are more specific and vendor/platform specific. 
+-->
+
+## Security Technical Implementation Guide
+
+* STIGs provide the specific process to enable an organization to configure a system.
+* Fed from CCIs and SRGs, the STIG is a vendor specific document outlining controls to be implemented
+* STIGs are generally viewed and manipulated either using spreadsheets or a program called the **STIG Viewer**
+* STIG controls will be OS or software specific and usually provide specific instructions on how to fix and measure the finding
+
+<!--
+The STIGs provide a detailed controls on how to secure a system. The STIG controls are written in XML and can be viewed in a browser or some type of viewing tool like the STIG Viewer. The controls are broken into three Categories, Critical (1), Moderate (2), and Low (3). Generally, a "Fully STIGed" will have all the controls implemented but in a functional production environment, it is difficult or impossible to get all the controls in place and have systems still have an acceptable level of useability. The most secure computer is one that is never used, never turned on and stored in a 10 foot thick concrete box. That system is not very useful. Throughout this course we will be focusing on understanding controls and correlation those controls to the risk that it exposes a system to. As a general rule, all CAT 1 controls should be fulfilled, high risk CAT 2 controls should be addressed and POAM items should be made of the balance of CAT 2 controls and as many CAT 3 controls as possible should be implemented with mitigation and acceptance of risk for those that can not be implemented. Using a tool like the STIG Viewer you will get to make comments and assess controls. These tools are similar to those you will expect to see in the fleet, if not the exact same. The important items to remember is where the controls were obtained and endeavoring to understand the risk associated with the vulnerability the control is addressing. 
+-->
+
+## SCAP Content
+
+* The Secure Content Automation Protocol enables us not to manually assess and validate STIGS
+* Includes various components
+* Common terminology/dictionary(CVE,CPE,CCE)
+* Measure of badness (CVSS)
+* Common language to work on (OVAL, OCIL)
+
+<!--
+
+As with the STIG which is an XML list of specific controls that can be applied to a system, the Secure Content Automation Protocol is an automated process for scanning against standards. Not all STIG and controls are supported because you can only automate so many of the items. The remainder needs to be manually assessed, as we did in Lab 2. The benefit is that the time required to make the assessment is greatly reduced through automation. Please take a moment to reivew the SCAP document provided by NIST [SCAP Word Doc].
+
+-->
+
+## SCAP Compliance Checker (SCC tool)
+
+* SCAP is an automated method of *auto-magically* testing the security controls for various pieces of software or operating systems
+* THe SCAP Compliance Checker is only on the NIPR Cyber Exchange
+* The SCC supports various types of input and produces STIG Viewer Outputs
+* The current version is 1.2 with 1.3 being developed and a 2.0 version posted
+* The SCAP Compliance Checker (SCC) is a tool made by Naval Information Warfare Center and can be used for various operating systems
+
+<!--
+
+The SCAP content can be used to automate checking these standards. As with STIG Viewer the SCC tool is a good example of a program made by the US Government and used by the US Government. It will enable you to load SCAP content and run the automated tests against that content. The output can then become the basis for your STIG Viewer Checklist, we will see this during the full hardening lab (Lab 2). There are various tools that can accept the SCAP content but the SCC tool will be the one we use for assessment of Microsoft Windows.
+
+-->
+
+## SCAP Scanner (Others)
+
+* The SCC SCAP tool is not the only "approved version"
+* [Validated SCAP Tools] range from OpenSCAP to NESSUS
+* For the purpose of the course we will be using and learning about the SCC and OpenSCAP tool centered around Windows 10 and CENTos 7
+
+<!--
+There are a number of additional tools that are used for assessment of SCAP content. You willl see in the Validated SCAP Tools above all the industry tools avalible to you to use in the fleet/. 
+-->
+
+## Putting it all together
+
+* Lets Track down IA-5(1)(d) -- [Page F-95 of NIST 800-53]
+* From the above linked matrix [Control to CCI mapping] we notice that we are left with a few CCI not specific to an operating system.
+* Enter the CCIs into the STIG Viewer Program to get specific controls
+
+<!--
+There are so many controls and references it is difficult to get a handle on what is what. What we can do now is walk through a controls and identify a few ways we can find CCIs as well as specific Vuln ID numbers for a our IA-5 vulns. We will look specifically at the IA-5 (1) (d) control -- "Enforces password minimum and maximum lifetime restrictions of [Assignment: organization-defined numbers for lifetime minimum, lifetime maximum];".
+
+First, what does [Assignment: organization-defined numbers for lifetime minimum, lifetime maximum] mean?
+
+The control is designed to be flexible depending on the information system rules. It is expected that depending on the risk posture an information system owner will decide what an acceptable minimum password length as well as maximum password length should be. Many times we don't know what good values would be but luckily the STIG has some value identified as well as a method to configure it. In this case we would open the spreadsheet document: [Control to CCI mapping] and use the filter tool to filter on the "IA-5 (1) (d)" (note that the format on the spreadsheet includes spaces where the NIST PDF does not). That will give us about 8 controls:
+
+| Item | CCI        | /cci_items/cci_item/definition                                                             | creator | index        | title                     |
+|------|------------|--------------------------------------------------------------------------------------------|---------|--------------|---------------------------|
+| 794  | CCI-001616 | The organization defines minimum password lifetime restrictions.                           | NIST    | IA-5 (1) (d) | NIST SP 800-53 Revision 4 |
+| 795  | CCI-001617 | The organization defines maximum password lifetime restrictions.                           | NIST    | IA-5 (1) (d) | NIST SP 800-53            |
+| 795  | CCI-001617 | The organization defines maximum password lifetime restrictions.                           | NIST    | IA-5 (1) (d) | NIST SP 800-53 Revision 4 |
+| 796  | CCI-001618 | The organization defines the number of generations for which password reuse is prohibited. | NIST    | IA-5 (1) (d) | NIST SP 800-53            |
+| 826  | CCI-000198 | The information system enforces minimum password lifetime restrictions.                    | NIST    | IA-5 (1) (d) | NIST SP 800-53            |
+| 826  | CCI-000198 | The information system enforces minimum password lifetime restrictions.                    | NIST    | IA-5 (1) (d) | NIST SP 800-53 Revision 4 |
+| 827  | CCI-000199 | The information system enforces maximum password lifetime restrictions.                    | NIST    | IA-5 (1) (d) | NIST SP 800-53            |
+| 827  | CCI-000199 | The information system enforces maximum password lifetime restrictions.                    | NIST    | IA-5 (1) (d) | NIST SP 800-53 Revision 4 |
+
+You can notice the spreadsheet gives us a variety of inputs from various publications. Some are rev 4 others are not, the controls are almost identical. Lets just look at the following CCIs:
+
+| CCI        | /cci_items/cci_item/definition                                          | title                     |
+|------------|-------------------------------------------------------------------------|---------------------------|
+| CCI-001616 | The organization defines minimum password lifetime restrictions.        | NIST SP 800-53 Revision 4 |
+| CCI-001617 | The organization defines maximum password lifetime restrictions.        | NIST SP 800-53 Revision 4 |
+| CCI-000198 | The information system enforces minimum password lifetime restrictions. | NIST SP 800-53 Revision 4 |
+| CCI-000199 | The information system enforces maximum password lifetime restrictions. | NIST SP 800-53 Revision 4 |
+
+We see there are four tasks broken into two groups:
+1) Define Password lifetimes (Max and Min)
+2) Enforce Password lifetimes (Max and Min)
+
+We also have 4 CCI numbers associated: CCI-001616, CCI-001617, CCI-000198, CCI-000199
+
+Next we will utilize a tool we used in lab called "STIG Viewer". You can open the program up and filter on some of these CCIs. We have previously loaded in the Windows 10 STIG and by using the "Filter Panel" in the bottom left of the windows we can filter for CCI in the control set. Here I enter each CCI as a filter and search by "Any" under "Must Match". By doing this we end up with **THREE** controls for the Windows 10 STIG.
+
+* V-63371 -- Accounts must be configured to require password expiration.
+* V-63419 -- The maximum password age must be configured to 60 days or less.
+* V-63421 -- The minimum password age must be configured to at least 1 day.
+
+We we also notice that these controls are technical controls that do not cover CCI-001617 and CCI-001616. How would we fulfill these controls?
+
+What other information does the tool give you?
+
+Why would this specific control be important?
+
+-->
+[SCAP Eye Bleeding PPT from 2000's]:https://nvd.nist.gov/scap/docs/SCAP-02112007-IAWS.ppt
+[DISA STIG/SRG -- CAC and Public]:https://iase.disa.mil/stigs/
+[Open SCAP]:https://www.open-scap.org/
+[STIG Viewer]:https://public.cyber.mil/stigs/srg-stig-tools/
+[CCI Reference]:https://public.cyber.mil/stigs/cci/
+[CCI Specification]:https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/u_draft_cci_specification_v2r0.2.zip
+[Validated SCAP Tools]:https://csrc.nist.gov/Projects/scap-validation-program/Validated-Products-and-Modules
+[Control to CCI mapping]:https://csrc.nist.gov/csrc/media/projects/forum/documents/stig-mapping-to-nist-800-53.xlsx
+[SCAP Acronyms]:https://www.open-scap.org/resources/acronyms/
+[SCAP Word Doc]:https://nvd.nist.gov/scap/docs/SCAP.doc
+[Page F-95 of NIST 800-53]:https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf
+
+# Class 06 MITRE Att&ck 
+
+## Introduction
+
+* Understanding adversary actions helps understand defense
+* Moving from high level threat actions to tactics requires various models
+* ATT&CK by MITRE is very much in the "Operational Level"
+
+<!--
+
+We have spent time so far looking at some of the tools we are going to use in class, some of the standards we are going to use to defend against attackers and we briefly talked about attackers last class when we looked at Defense in Depth. With that now we are going to dive a little deeper into some of those attacker TTP (Tactivs Techniques and Procedures) by touching on the MITRE ATT&CK Matrix and Navigator. This is a tool that enables us to tie high level attack models to actionable measurable indicators (be it an Indicator of Compromise or behavioral indicator).
+
+-->
+## Definitions
+
+* TTP -- Tactics Techniques and Procedures
+* IOC -- Indicator of Compromise 
+
+## References
+
+* [ATT&CK Whitepaper]
+* [Lockheed Martin Developed the Cyber Kill Chain]
+* [David Bianco's Pyramid of Pain]
+* [Pyramid of Pain]
+* [ATT&CK V6]
+* [Navigator V2]
+* [MITRE Workshop Videos]
+* [MITRE Workshop Slide Deck]
+
+## High Level
+
+![Lockheed Martin Developed the Cyber Kill Chain]
+
+<!--
+
+The idea that we use models to help us understand what is happening in the world is common. Lockheed Martin developed the Cyber Kill Chain in order to help customers understand how one can break the chain and stop a cyber attack. As with most root cause analysis one can look back and piece together all the things that went wrong before a catastrophic event occurred. Suggested reading if you are interested includes [Root Cause Analysis for Beginners]. It is not a focus of this class but puts the Cyber Kill Chain into perspective, consider it purely optional. 
+
+That being said, there is a series of events that typically occur for an attacker to successfully exploit a system. Many times the phases are combined but as a rule most of these items need to occur to execute a successful attack. The Lockheed Martin Cyber Kill Chain is an example of a High Level Threat model. In our case we need to understand understand that it is a high level model that feeds the MITRE ATT&CK matrix.
+
+-->
+
+## What is MITRE
+
+* A large (8425 employee) not-for-profit 
+* Manages federally funded R&D centers for Federal Gov
+* Organized into 7 Centers
+
+<!--
+
+MITRE is an American not-for-profit organization that obtains grants from the US Government to operate 7 research and development centers. One of those centers are focused on Cyber Security and for a long time MITRE has been working with security vendors, researchers, and security engineers to make a system that would enable us to understand attackers so we could better defend against them. This is starting to mature now and we are going to use it as a way to translate and combine a lot of cyber threat information into actionable indicators in our network.
+
+-->
+
+
+## Pyramid of Pain
+
+So why change?
+
+![Pyramid of Pain]
+[David Bianco's Pyramid of Pain]
+
+<!--
+
+The idea behind the ATT&CK matrix is that it is tracking things that are hard for adversaries to change. It is said that in old houses one step is made higher than the others and the home owner finds it second nature climbing the stairs daily. It is only when an intruder is in the home that the intruder is not accustomed to the one higher step and may trip alerting the owner. That may be an old Yankee myth but it illustrates how some things we do daily are so ingrained in who we are it is difficult to even notice we do them. In the cyber world these are Tactics Techniques and Procedures. For a more tech example lets take my `.bash_history`. If one was to look at my bash history they would find it filled with specific commands that I use every day to accomplish my goals. Those commands are not exactly what we are focusing on but more how we use them, take these two snippets of code doign the same thing:
+
+Example A
+```bash
+cd /
+ls
+cd /var/
+ls
+cd www
+ls
+cd html
+ls
+sudo scp root@123.456.789:/var/www/html/file.html
+```
+
+Example B
+```bash
+ls /var/www/html
+sudo curl -o /var/www/html/ http://123.456.789/file.html
+```
+
+We notice in both examples a file is being downloaded from a remote source and placed in the /var/www/html/ directory. You can also notice and they both use similar commands. How they accomplish that goal is very different. The top example shows someone poking about and walking through the directory. Example B shows someone who knows where they want to look, listing files and then pulling down the file they need using Curl.
+
+If you see similar commands across systems you can start to learn how that person uses the system and thus start to see subtle finder prints in their work. The above example is exaggerated but think about how you could distinguish between these two individuals from a few lines of bash history.
+
+You will find it is difficult to un-learn how to do things, you normally default to what you are most comfortable with!
+
+-->
+
+## What is ATT&CK
+
+* A method to organize TTPs into categories
+* Helps track adversary actions
+* Assists in identifying similarities
+
+<!--
+
+Check out the **suggested** [ATT&CK Whitepaper] about the design philosophy. We will be diving into how the ATT&CK matrix is put together for homework/lab this week. The aim of the tool is to lay out common tactics that attackers use in a rough order of how they use them and then list the techniques (and sub-techniques) for those tactics below. By doing this it helps provide a map of how adversaries accomplish their goals. 
+
+-->
+
+## Phases of ATT&CK
+
+* Broken into Tactics (12)
+* Under teach tactic are various Techniques
+* Inside the Techniques are Procedures (Actual APT observed actions)
+
+[ATT&CK Whitepaper]:https://www.mitre.org/sites/default/files/publications/pr-18-0944-11-mitre-attack-design-and-philosophy.pdf
+[Lockheed Martin Developed the Cyber Kill Chain]:https://www.lockheedmartin.com/content/dam/lockheed-martin/rms/photo/cyber/THE-CYBER-KILL-CHAIN-body.png.pc-adaptive.480.high.png
+[David Bianco's Pyramid of Pain]:https://detect-respond.blogspot.com/2013/03/the-pyramid-of-pain.html
+[Pyramid of Pain]:http://4.bp.blogspot.com/-EDLbyYipz_E/UtnWN7fdGcI/AAAAAAAANno/b4UX5wjNdh0/s1600/Pyramid+of+Pain+v2.png
+[ATT&CK V6]:https://attack.mitre.org/versions/v6/
+[Navigator V2]:https://mitre-attack.github.io/attack-navigator/v2/enterprise/
+[MITRE Workshop Videos]:https://attack.mitre.org/resources/training/cti/
+[MITRE Workshop Slide Deck]:https://attack.mitre.org/docs/training-cti/CTI%20Workshop%20Full%20Slides.pdf
+[Root Cause Analysis for Beginners]:https://ldh.la.gov/assets/medicaid/hss/docs/NH/RootCauseForBeginners.pdf
