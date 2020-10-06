@@ -1,3 +1,4 @@
+#This is a consolidation of material created by Constantine Macris
 # Class 00 -- Introduction
 
 ## What is Git and how do we use it!
