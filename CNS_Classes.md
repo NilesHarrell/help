@@ -3411,3 +3411,113 @@ sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 sudo iptables -A OUTPUT -p tcp -m tcp -j ACCEPT
 ```
+
+# Class 16 DMZ
+## References
+
+* [GPG Sign a file](https://www.techrepublic.com/article/how-to-sign-a-file-on-linux-with-gpg/)
+* [Encrypt with SSH](https://bjornjohansen.no/encrypt-file-using-ssh-key)
+* [Sign and Ecrypt with GPG](https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages)
+
+## Definitions
+
+## PGP -- GPG -- SSH
+
+* Make a GPG Key
+
+```bash
+gpg --default-new-key-algo rsa4096 --gen-key
+gpg --list-secret-keys --keyid-format LONG
+gpg --armor --export {{ KEY_ID }}
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBF5LT2UBEAC11vhed7LAVeGGzbkXlXL/Nx7zmHgsoFt7D5UCoevYqNT2gATN
+oGqMZ1zwNNpZsoA1VBqBzHo1bo5htG3CxYgldbmrG6/h9NoVKX0g48Ym0ZzPs6Hn
+47k7KSLfthPNjJgq3XEabp5FNextTXf7XlE2/l00cYlwE7ZXHjIq9v2F7iiImkOs
+tLNeydEN5Wf9svZ5fVl2IVfx4R9OPLe2vFRMS9tnz7uz0/y7N6ClZQg+BLuaW9wp
+ccKgQmF6rsT39fBe+ou8aHtdz6hyQeBeAPa9OteLIxsspOSHqlJTxUDuVzlcpUi/
+/kPKb5KabcxIaRLHPaqNfIA7f2QiZJ84RRbX8hKECG9BedIiISvVSPCunN9ZNiGl
+hDreiVAxiC9fqFYlZxn44ASHEnnZw+FJQ/GHEBIh1v6TX/TIePfAr8Y3HrcNERY9
+KKlIn+maH4E/YkiAHwBsE9ndr+faFWB+K5w0P49tVi5azAMzFBOhjqXakYuVLo8i
+l/ehAPTqddLiWqwiMdwacg3dFaTy7S9EkulKpwRp4Ld8Rbt7D1XGssRoamsXAzBY
+4JSh+ConXct6jeEeWFYNqz4cmnWnDx5XGy208jb3x7PFvuaLaHtHdQtsLoJEE4yG
+C23Z8Rf5mLuXeDEHbHQUHr497x941Hf6X3+c/nnvjyKuKtA32ZtEoD5gawARAQAB
+tCBDIE1hY3JpcyA8Y29uc3RhbnRpbmVAbWFjcmlzLmNvPokCVAQTAQoAPhYhBPNS
+0UA8EMmV/jjVkWCrp1xrtGQsBQJeS09lAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQW
+AgMBAh4BAheAAAoJEGCrp1xrtGQsGdwP/RYaB2Zh0+3+Z3udNnAz+2ySeccSCf67
+UD49zIDgAcCF6PSesoa2pguMdtujokJjhL+cLSHD2RGg/xSDevBux17t0HG944On
+XC9XbouvkyvsNYmyaG2h2Pm74gpy0sQFJC+K5oWQOkuzMK1CmlhcAkfnA9qFggY4
+d8mOHPbqr3DKnMEzqcJSkmKOdHqlzTV72H+k2zEcgc3ayVJUqG49JGZME/sumDUs
+SxdtB76qEjyciDZPpP5Z6aFGcO+Y5eMyHpWHrmZn80pnrA1RFTD3NWqosvFcuSS0
+xRjW/rRlfl8EZzhoO4kzSg8YlEorcLTl4F0yLNYqBK8U5U2Z/W8rd5fJvDPsONOv
+p2VGrtjHsKzjlRx+jleKvngIP1l3zfd5MCHLxwxi063ZJNc5m9lUYMu5mJmZ1piK
+B8B1ZeD2Q4WI3vDvmEcjNhixBDxk1qbroC+MXG4DFRM7oIHLsUbraInH9n6pmvgd
+VQ0BLdXIZCZxTxvgbAclK83rgHY3IUUpM2nEU4+SROg6kUAL4Z6kRCdKIXwczt8b
+9NCXGPLua8SuQ41bn9jwjXrN52572lg3jUuvMqq+nqyLaTKAnfckvdhHYL9NCl/4
+VVLporqJKwsQLN19S9OQscjh5tYDSHSlByE9rdaGDrFsSmcz5KbZcAPD16eMrG2g
+U/67Dp/mpqcf
+=nEq+
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+* Copy GPG Public Key to GitHub account
+* [Sign a file](https://www.techrepublic.com/article/how-to-sign-a-file-on-linux-with-gpg/)
+
+```bash
+gpg --sign --default-key email@address gpg.docx
+# import public key
+gpg --import key.txt
+# check signed file
+gpg --verify gpg.docx.gpg
+```
+
+## Lets Encrypt
+
+* [Try This](https://bjornjohansen.no/encrypt-file-using-ssh-key)
+
+## Lets Encrypt and Sign a doc
+
+* [Now put it together](https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages)
+
+## IPsec Review
+
+* IKE Phase 1 -- Identifiation and Authorization -- UDP 500
+* Layer 3 Security Tool (True Layer 3)
+* Tunnel vs Transport Mode
+
+## HAGLE
+
+* H -- Hash
+* A -- Authentication
+* G -- Group (Diffi Hellman)
+* L -- Lifetime
+* E -- Encryption
+
+## DMZ
+
+* Location between the internet and internal net
+* Seperate hosts that have public attack surface
+* Limit services, maintain managment on internal network
+
+
+A DMZ is used to provide external services on a company network. It is a way to host your webserver using existing infastructure. This eliminates the need to expose an internal network to a less secure network like the internet while providing a manner to manage the environment. 
+
+
+## Things in a DMZ
+
+* Web server
+* Mail Server
+* FTP Server
+* API services
+
+
+There are various things that go into a DMZ, many of which need additional exterior connectivity. When considering if something should go into a DMZ consider if you are considering making a firewall rule or opening a port. This should be the first thing you consider when looking at a DMZ.
+
+## DMZ Configuration
+
+* Single Firewall
+* Dual Firewall
+
+
+There are two main configuations when looking at DMZ, one has a single firewall where one interface is dedicated to a subnet, or multiple subnets which will be placed in the DMZ with specific firewall rules and routing. The second is placing the DMZ subnet between two firewalls where one firewall is the an exterior firewall with DMZ rules and the inner firewall has rules associated with the internal network.
