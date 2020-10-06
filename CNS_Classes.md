@@ -425,3 +425,367 @@ constantine@pop-os:~/$ tree -d / -L 1
 [Linus' GitHub Page]:https://github.com/torvalds/linux
 [Interactive Distro Timeline]:https://upload.wikimedia.org/wikipedia/commons/1/1b/Linux_Distribution_Timeline.svg
 [History of Linux]:https://www.digitalocean.com/community/tutorials/brief-history-of-linux
+
+# Class 03 -- Linux Basic
+
+## Definitions
+
+* SSH  -- Secure Shell
+* OTP  -- One Time Password
+* FQDN -- Fully Qualified Domain Name
+
+
+## Linux Commands -- `man`
+
+* Use the command `man` to get a manual page on any other program or command
+* Navigate the page using the `j`, `k` keys (down, up)
+* Search the manual with `/` (slash) followed by the **enter** key
+
+<!--
+
+The abaility to get help when learning Linux is paramount. To do this we know we have online search engines but that is *not efficient and tends to break you out of what you are working on to grab the mouse or touchpad. Instead you can find **manauls** build into the programs we use. The nice thing about the manuals is that they follow a pretty standard format. There are 8 main sections of the manual, some sections are not present or not used.
+
+| Section |                            Description                           |
+|:-------:|:----------------------------------------------------------------:|
+| 1       | General commands                                                 |
+| 2       | System calls                                                     |
+| 3       | Library functions, covering in particular the C standard library |
+| 4       | Special files (usually devices, those found in /dev) and drivers |
+| 5       | File formats and conventions                                     |
+| 6       | Games and screensavers                                           |
+| 7       | Miscellanea                                                      |
+| 8       | System administration commands and daemons                       |
+
+You can access the man page for a command or program simply with `man <command>` which will bring you to the default **Section 1** or only section depending on what is present. If you want a particular section you can specify it with `man <section> <command>`. You can also simply show all man pages with `man -a <command>.
+
+You can search within man pages with the `/` key which will enable you to seach for text in the body of the man page. If you don't want to enter the search again simply hit the `/` key without any search string and it will default to the last searched string. 
+
+At this point you may wonder how do I get out of this gloruious font of knowledge? Use the `q` button to bring you back into your shell.
+
+-->
+
+## Finding the right command
+
+* Using the `apropos` command one can search man files
+* You can get reminders or ideas of new commands
+* This is a great resource if you forget a command or need a quick way to find new tools!
+
+<!-- 
+
+Many times it is difficut to remember the exact command you want to use. Going to the internet is again not always the best place to start so you can use built in tools to Linux to remind you of commands you know, or find new commands. For example if you want to find a command to "List Files" we already know that is `ls`. For a moment imagine you forgot the command, you could use the command `apropos list files` to help job your memory. If you do that you get a long list and the `ls` command is in there! What is cool is that you get a great view of differnt commands you never knew about that do simlar things. like `lsattr` which will list file attributes. You can pivot and read about attributes in a Miscellanea section page on attributes with `man attributes` or dig into lsattr with `man lsattr` if you think it will be useful for your work. Learning to navigate the man pages is important, like the VI editor you can navigate with the `j` and `k` keys to go down and up (the arrows also work). It may not seem natural at first but start to notice how many times your hands need to leave the keyboard for a mouse or arrow keys, it is minimized by using keyboard shortcuts and command keys!
+
+-->
+
+## Installing
+
+* Ubuntu uses the APT package manager
+* Software is installed via repositories
+* The package manager will assist in managing depedencies
+* You need to elevate your privledges to install software (generally)
+* `apt [OPTION] {command}`
+
+<!--
+
+If you have been playing around in any operating system you know that you will eventually need to install something. The way that Linux approaches this is very different from Windows. Windows issues a self contained binary you know as files with an "exe" extension. This generally brings you to a wizard that helps you install the software and all dependencies. Most of the time libraries for that dependency are incldued and compiled into the binary. Linux utlizes a different approach. The operating system has trusted repositories that it uses. These are public places where software for the system can be pulled from. You can add your own un-trusted repos but most of the tools you need can be obtained from the Distobution Repository. You can use your package manager to update software, install new software, upgrade your operating system, and much much more. The repostories can act as trusted software souces, and you can use remote repos or pull down the software you want and host one locally on your network. This is a very powerful concept for secure computing. The other benefit is that software can simply list dependencies, and the package manager will deconflict those depedencies. If you need a library for XYZ program, and you already have it, then the package manager will know that and not need to install it again. It will also check the repo for udpates and will update ALL that software and everything in the dependecy tree. Say goodbye to opening up software and having it need to get an update, the package manager does that for you.
+
+You can check out the man page for `apt` and start to touch on its function, you will see varous associated programs like `apt-get` and `apt-cache`. We could do a whole class on just the apt package manager but know that you can use it to search with `sudo apt search <program>` or pull new software with `sudo apt update && sudo apt upgrade`
+-->
+
+## Navigating and Basics
+
+* Find out where you are with `pwd` Print Working Directory
+* Change directory with `cd` 
+* List the programs in a directory with `ls`
+* Print files to the screen with `cat` (also concatenates files) or `less` (more is less)
+* Edit text with `nano`, `vi`, `vim` or `emacs` (nano is easiest)
+
+<!--
+
+To get started it is nice to know some basic commands. To move around a shell in a text based user interface it a few commands will be helpful. Using `pwd` to find out your current location is helpful. Everything is mounted to the root of the file system `/`. From here you will find directories and mount points. Many times your BASH shell will show you the current directory as part of your command prompt for example mine for the CNS repo is: `constantine@pop-os:~/repo/cns$` where it shows `<user>@<host>:<directory>$` When we look the directory we see a few strange things, the `~` (tilde) represent the user's (constantine) home directory (in this case it is /home/constantine). If I were to expand out the path that the command prompt is in it would looke like this:
+
+```bash
+constantine@pop-os:~/repo/cns$ pwd
+/home/constantine/repo/cns
+```
+
+To go backwards from /home/constantine/repo/cns to /home/constantine/repo (go up one directory from cns to repo) you would use the short hand for moving up one directory in the tree which is `..` (two periods) where `.` (one period) represent the current directory, and `..` represent the parent directory. The command would be `cd ..`
+
+```bash
+constantine@pop-os:~/repo/cns$ pwd
+/home/constantine/repo/cns
+constantine@pop-os:~/repo/cns$ cd ..
+constantine@pop-os:~/repo$ pwd
+/home/constantine/repo
+```
+
+If we want to see what is in the directory we will be using a command we have seen before `ls`. Using `ls` will list the contents of the directory. In its more useful form `ls -al` will list files in long format (`-l`) including all hidden files (`-a`)
+![ls -al](https://cga.sfo2.digitaloceanspaces.com/cns/images/CapturedImage-16-08-2020%2014-52-08.png)
+![ls -al](https://cga.sfo2.digitaloceanspaces.com/cns/images/CapturedImage-16-08-2020%2014-52-00.png)
+
+If we want to see the contents of some the files in a directory we can use the `cat` command. For example lets take the file `syllabus.md`
+
+```bash
+constantine@pop-os:~/repo/cns$ head syllabus.md 
+---
+title: "Syllabus"
+subtitle: "Computer and Network Security"
+author: "Constantine Macris"
+date: "12JAN2020"
+titlepage: true
+titlepage-color: "2E3B86"
+titlepage-text-color: "FFFFFF"
+```
+You will notice that it will list the text from the whole file (displayed above is only the first few lines)
+
+If you don't want to show the whole document in the shell in line you can use the `less` command that will allow you to scroll through the pages with arrows or specific keys you can find in the help file using the key `h`. Check it out!!
+
+If you want to specifically look at only the first n number of lines you can also check out the `head` command. As you can imagine the last few lines can be displayed with `tail`
+
+-->
+
+## Make Directories, Copy, Move and Remove
+
+* A folder is generally called a **directory** in Linux
+* Make a directory with `mkdir` and remove an empty directory with `rmdir`
+* You can copy files with the `cp` command. `cp <file to be copied> <destination>`
+* If you want to move a file (it will no longer be at the source) use the `mv` command. `mv <file or directory source> <destination>`
+* To remove a file you will use the `rm` command.
+
+<!--
+
+In Windows you move and copy files in the file explorer or file manager. In Linux you generally will not have a GUI (however the mechanics of moving and copying files in a GUI are pretty much the same as Windows). You will be using the shell and commands to move and copy files, make directories and otherwise manipulate files. As you can imagine a 2 year old can use most GUIs but it will take a little more time to master the shell commands. The first nuance is that **folders** are called **directories**. You can make directories with `mkdir` or remove directoires with `rmdir`. It is important to note that you can only remove an empty directory in this way. If you would like to remove a directory and its contents you will need to use the `rm -rf <directory name>` **Proceed with caution because Linux will let you delete your entire file system with this command if you issue the root directory as a path** That would be a bad day and the end of that system.
+
+To copy and move files it is somewhat similar, you will using the `cp` command to copy and the `mv` command to move. Copy will make a copy of the file or directory at the source, move will move the entire thing and remove the source. You can get more information on all these commands with the `man` page for each. These command should become second nature. 
+
+Like we said above, the remove command, `rm`, can really ruin your day. Linux will not stop you from removing yourself. But you can remove just about whatever you want with it. 
+
+-->
+
+## Network
+
+* There are various pieces of software that manage system networking
+* Modern versions of Ubuntu use the `ip` command
+* `ip` allows you to display and change network devices, interfces and tunnels
+* Look at your IP address with `ip addr`
+* `ip [OPTION] OBJECT {COMMAND | help}`
+
+<!--
+
+The `ip` commanad is an all purpose network command that helps accomplish many networking goals in Linux. At the most basic level it allow you to see what interfaces you have on your system and the IP addresses associated with them. It is, like most of the tools we are talking about, much more powerful. The command will let you set up static routes, manipulate network interfaces, manage and display IP Routing Tables and much much more!
+
+-->
+
+## Remote Connections -- SSH
+
+* SSH -- Secure Shell is a method for remote access to machines
+* Provides a secure method for remote access
+* Supports multiple authentication modes
+  * Passworkd
+  * Public/Private Keypair
+  * Certificate
+  * OTP
+* `ssh <user>@<FQDN>`
+
+<!--
+
+A key aspect to working in this course is going to be getting comfortable moving from one machine to another. The most common way to remotely manage Windows machines is by using Remote Desktop Protocol (also supported by Linux) which is comparably heavy weight and insecure. Linux is majorly managed using SSH or Secure Shell. It is a remote access protocol on **port 22** by default that enables remote managment of systems in a LAN or accross a WAN. It is generally considered as secure as the types of encryption and ciphers used and because it is so lightweight it is fast and reliable. In the lab we set up Ansible that uses SSH as a standard means of access into a system. One can set up almost any authentication mechanism for SSH including LDAP (Lightweight Directory Access Protocol), password, token, cert, OTP and many more! We will be using SSH so take a moment to become familiar with the command and the features!
+
+-->
+
+[IP Command Examples]:https://phoenixnap.com/kb/linux-ip-command-examples
+
+# Class 04 Defense in Depth
+## Definitions
+
+* NIST -- National Institute of Standandards and Technology
+* IA   -- Information Assurance
+* DISA -- Defense Information Systems Agency
+* RMF  -- Risk Managment Framework
+* STIG -- Security Technical Implementation Guide
+* SRG  -- Security Requirements Guide
+* SCAP -- Security Content Automation Protocol
+* APT  -- Advanced Persistant Threats
+
+## References
+
+* [NSA Defense in Depth]
+* [Information Assurance Technical Framework]
+* [National Information Assurance Partnership]
+* [Common Criteria Profiles]
+* [NIST RMF]
+* [NIST 800-53]
+* [NIST Control Familes]
+* [Bruce Schneier Defense in Depth]
+* [Authentication Management]
+* [FireEye APT]
+
+<!--
+Above are some references used in class and should be reviewed and treated as **required reading**.
+-->
+
+## Introduction
+
+![Depth](https://blog.knowbe4.com/hubfs/Defense_in_Depth.jpg)
+
+<!--
+Everyone knows we need security on our information systems. The biggest issue organizations have is where to start. In our first class, we will be exploring a few different government standards for information system security. The first thing we will look as is Defense in Depth. Defense in Depth is the idea that organizations should have layered security much like a historical castle. From there we will talk about the NIST 800-53, which is the security controls for federal systems. As you can imagine and much like exercise routines, there are literally of hundreds of security frameworks out there, including one that uses the same scale as your credit score... The most important aspect of security frameworks is that you adopt one for the right reasons. 
+-->
+
+## Defense in Depth
+
+* A best practice guide to security
+* Defined by the NSA in a white paper. [Defense in Depth](https://cga.sfo2.digitaloceanspaces.com/cns/nsa-defense-in-depth.pdf)
+* Provides high level construct of layered defense model
+
+<!--
+Defense in Depth is security layering methodology developed by the National Security Agency. The idea is that by layering security controls and considering a holistic approach to security, you will cover your security bases. The method includes consideration of adversaries, balancing security of people, technology and principals
+-->
+
+## Defense in Depth -- Castle
+
+![defense](https://blog.sucuri.net/wp-content/uploads/2016/10/defense-in-depth-castle.jpg)
+
+## Defense in Depth - Adversaries
+
+* Who are your Adversaries?
+* What are they trying to achieve?
+
+<!--
+
+When considering the attack surface of any system, it is important to consider who your adversary is. Closely coupled with this theory is how valuable those things you are protecting are. If you have a very expensive jewel in your home, you can expect that you will need to enhance your security posture to protect that highly valuable item. You would expect that the adversary will change from a casual thief to an individual who is targeting your home specifically because of that high value item. Normal locks are no longer adequate and you may consider getting a safe and a security system. If that jewel is worth $10 million, you would expect to spend a substantial sum of money to protect it. The more valuable the target, the more lengths individuals will go to steal it. Who wants what you have and why?
+![](https://www.riskmanagementmonitor.com/wp-content/uploads/2016/04/bae-the-usual-suspects.jpg)
+
+-->
+
+## Defense in Depth - Adversaries (part 2)
+
+* Adversaries include Nation States, Terrorists, Criminal Activists, Hackers or Corporate Competitors, etc.
+* Motives include intelligence gathering, embarrassment, prestige, monotary gain, etc.
+* Attacks include monitoring, active attacks, close-in attacks, exploitation of insider, supply chain attacks, denial of service (DOS), etc.
+
+<!--
+For data systems you can expect that adversaries include but are not limited to Nation States, Terrorists, Criminal Elements, Hackers and Corporate Competitors. As you can imagine the adversaries do not need to simply steal data. They can attack any aspect of the C-I-A (A-N) triad. There is a general misconception that one must have something of value to be a target, as described above. With automated scanning and exploitation it doesn't take anything to be a target other than being exposed. Many times the most valuable thing you have is not valuable to the adversary at all but to you. That is why ransomware has become such a problem for businesses in the last number of years. 
+-->
+
+## Advanced Persistent Threats
+
+* Usually well organized well funded (Advanced)
+* Have objectives that continue across years (Persistent)
+* Looking to harm target organizations (Threat)
+
+<!--
+
+Advanced Persistant Threats are highly organized highly technical "enterprises" that utiltize connectivity and technology to obtain tactical, operational and strategic objectives. APTs may be backed by nation states or criminal organizations. They are developing tools techniques and procedures (TTPs) as well as utilizing those avaliable to the public. We will go deep into APTs during our classes dealing with cyber threats but it is important to know that they exist and that they may be called under a number of names depending on who has discovered them. Take a moment to read about some APTs covered by FireEye at [FireEYE APT]. We will discuss mapping APTs using the MITR Att&ck matrix in the next class!
+
+-->
+
+## Information Assurance
+
+* Protection of Confidentiality, Integrity, Availability, Authentication and Non-Repudiation
+* Application based on **Protect, Detect, and React** paradigm
+* IA requires a balance focus on People, Technology and Operations
+
+
+<!--
+The concept of information assurance is one that we link to "Cyber Security". The application of information assurance is in alignment with the cycle of protect, detect and react. The three relatively simple items combine to a continual improvement cycle which is the heart of any security program. In Defense in Depth Information assurance is the umbrella that attempts to balance people, technology and operations. When we apply these concepts together we get a basic security matrix that can call the defense in depth matrix.
+
+|         | People | Technology | Operation |
+|---------|--------|------------|-----------|
+| Protect |        |            |           |
+| Detect  |        |            |           |
+| Respond |        |            |           |
+
+-->
+
+## Information Assurance -- People
+
+* Gain support from top down
+* Develop policies, procedures, roles, and responsibilities
+* Assure continued training, skills development and accountability
+* Includes physical and personnel security
+
+<!--
+It is a firm belief that personnel are the only tool that can solve security problems. Today there are hundreds if not thousands of "solutions" that will bombard security teams. When considering people as the core solution we realize it is not simply the ninja security engineer that is needed, but an entire security team. A top down approach requires support from the C-Suite or high level officials. Development of policies, procedures, roles and responsibilities will provide the people with the scaffolding to make good security programs. 
+-->
+
+## Information Assurance -- Technology
+
+* Assure the right technology is procured and deployed
+* Assure adequate controls support acquisition
+* Provide documented configuration guidance
+
+<!--
+
+We have talked about the solution bingo which shows overlapping solutions, solutions such as a service and lots of technology that leads to technology bloat. The simplest implementation that is the easiest to understand tends to be the most secure. It is important in the Defense in Depth construct to procure and deploy the correct technology. This often means that the tool may not be best in class as too many tools that are best in class will conflict with each other. What is often overlooked is the controls around acquisition of technology. One of the largest risks to the DOD is in the form of supply chain risk. It is important to note that in order to claim security during acquisition adequate controls must be established and enforced on the supply chain; in many cases these controls are the same as controls that apply to end systems. Lastly, when implementing technology it is pivotal to have documented configuration guidance. We will be learning about Secure Technical Implementation Guides (STIG) and Security Requirements Guides (SRG) which provide foundations for secure configurations. Additional documentation should be developed to adequately describe your system and allow the security team to fully understand the operational environment.
+
+-->
+
+## Information Assurance -- Principals
+
+* Defense in Multiple Places
+* Layered Defense
+* Robustness
+* Deploy PKI and Key Management
+* Deploy Intrusion Detection
+
+<!--
+Defense in Depth has a number of principals that are outlined as specific focus areas. Defense in multiple places means not to put all your eggs in one security basket. When considering a castle you have defenses at not only the main gate but also the side gate and the galley entrance, no matter how small always defend every entry! Coupled closely is to layer your defenses, have a gate within a gate in our castle example. Layering defenses is the core concept around Defense in Depth where if one defense fails or is flawed another can take its place. The controls should be robust and have a defined failure state that corresponds to what would be expected, fail safe or fail open depending on the application. A key to any security would be an efficient effective method of key management. Lastly, Depth shows its age by specifying intrusion detection which as become more commonplace in both government and industry.
+-->
+
+## Information Assurance -- Operations
+
+* Activities required to be conducted on a day to day basis
+* Say what you do, Do what you say, Prove it
+* Update your systems
+* Protect -- Detect -- React (respond/recover)
+
+![NIST Compliance](https://forescout-wpengine.netdna-ssl.com/wp-content/uploads/2019/07/How-to-Comply-with-the-5-Functions-of-the-Nist-Cybersecurity-Framework-300x179.png)
+
+<!--
+I have summarized the entire of operations to a simple ethos of "Say what you do, Do what you say, Prove it." In short you need to document what you do; this enables not just the security team but also an auditor to evaluate the controls you have in place on paper. Do what you say assumes that those controls you have documented are in place and configured to the specifications required. Lastly, prove it by keeping the records and enabling auditing to the level that any third party can come in and verify that the controls are not only being fulfilled but there is a documented trail to prove it. It is important to not just set it and forget but to make security a day-to-day rhythm where you do not simply continue the same process day after day and year after year but continually improve your process and controls so that the safest day you will ever have will be tomorrow. Coupled with this is the concept of continual upgrade cycles. A leading cause of breaches is due to openly vulnerable systems that simply have not been patched. Patch your systems. Lastly we end with the Protect--Detect--React; within the same framework this process is necessary in one form or another, by making it an operational cycle we add it into the toolkit that is our security program.
+-->
+
+## Defense in Depth Resources
+
+* [National Information Assurance Partnership](https://www.niap-ccevs.org/)
+* [Common Criteria Profiles](https://www.us-cert.gov/bsi/articles/best-practices/requirements-engineering/the-common-criteria)
+
+<!--
+Provided here are a number of resources that will assist in familiarity with the Defense in Depth system. 
+-->
+
+## NIST Framework
+
+* [NIST RMF](https://csrc.nist.gov/projects/risk-management/risk-management-framework-(RMF)-Overview)
+* [NIST 800-76](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf)
+
+<!--
+NIST has created a number of frameworks as it relates to information assurance controls. If you search a term like "NIST Framework" one will likely find a link to the NIST CSF (Cyber Security Framework) V1.1. This Framework is one specifically designed for critical infrastructure and is a very good place to start and a great suggestion to make for an organization that wants to get started in adopting a cyber security framework. It is complete and free. In your career one will come across a number of standards to help frame a set of controls. For example, the Payment Card industry has combined to create the PCI-DSS which is by most counts the most highly adopted framework in industry based on the ubiquity of payment cards being used in business. ISO 27001/27002 is the ISO interpretation on controls and is again widely used. The Center for Internet Security has 20 controls making up the CISv7 which grew out of the SANS Top 20 Controls. The one we are going to focus on in this in this class is the NIST Special Publication 800-53r4. These are the "Security and Privacy Controls for Federal Information Systems and Organizations". You will likely see and need to navigate these controls working in the government sector. We are going to use the 800-53 as the basis for the next few classes.
+-->
+
+## NIST Families
+
+* [NIST Control Families](https://nvd.nist.gov/800-53/Rev4)
+* Individual controls grouped in C-I-A on Low-Moderate-High
+* For example, a super secret system that doesn't need to be up would be High-High-Low (C-High, I-High, A-High)
+
+<!--
+The controls in the 800-53 document can be separate into Low-Moderate-High impact. For example lets look at IA-5 [Authentication Management](https://nvd.nist.gov/800-53/Rev4/control/IA-5) we see that it shows the control, called the "Control Description." This will be the core of the control, in this control it is broken into 10 sub-parts (a-j). We see that for low impact systems we would use "Control Enhancements (1) and (11) which are seen below with additional supplemental guidance. In this case for a low impact system you would have IA-5(1)(a) to IA-5(1)(f) and IA-5(11) which would be an additional 7 Control Enhancements. Likewise you can notice Moderate Impact systems are (1),(2),(3) and (11) which is actually the same as High Impact Systems.
+
+So what are the additional Control Enhancements for?
+
+Additional Control Enhancements are ways to mitigate specific risks to a system. For example if you have a specific system that is developed and has some approved waivers for controls associated with authentication to make development more manageable (tokens or keys) control IA-5(5) may be used to mitigate this when delivery takes place. The focus of this system is to manage risk through understanding risk and providing reasonable mitigation to protect information systems and data. 
+
+-->
+ [NSA Defense in Depth]:https://cga.sfo2.digitaloceanspaces.com/cns/nsa-defense-in-depth.pdf
+  [Information Assurance Technical Framework]:http://www.iatf.net
+  [National Information Assurance Partnership]:https://www.niap-ccevs.org/
+  [Common Criteria Profiles]:https://www.us-cert.gov/bsi/articles/best-practices/requirements-engineering/the-common-criteria
+  [NIST RMF]:https://csrc.nist.gov/projects/risk-management/risk-management-framework-(RMF)-Overview
+  [NIST 800-53]:https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-53r4.pdf
+  [NIST Control Familes]:https://nvd.nist.gov/800-53/Rev4
+  [Bruce Schneier Defense in Depth]:https://www.schneier.com/blog/archives/2006/02/security_in_the.html
+  [Authentication Management]:https://nvd.nist.gov/800-53/Rev4/control/IA-5
+  [FireEYE APT]:https://www.fireeye.com/current-threats/apt-groups.html
+  
+  
