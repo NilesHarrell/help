@@ -2505,3 +2505,269 @@ end
 | Type-of-service (TOS) support       | No                                                                                                                                                                                                  | Yes                                                                                                              |
 | Hierarchical networks               | Flat                                                                                                                                                                                                | Areas                                                                                                            |
 
+
+# Class 12 Network Layer Security
+## References
+
+* Wu/Irwin 14.1 - 14.12 -- This material is new and needs to be reviewed in entirety.
+
+## Definitions
+
+* TCP -- Transmission Control Protocol
+* UDP -- User Datagram Protocol
+* SCTP -- Stream Control Transmission Protocol
+* DoS -- Denial of Service
+* DCCP -- Datagram Congestion Control Protocol
+* INS -- Initial Sequence Number
+* RTT -- Round Trip Time
+* ENC -- Explicit Congestion Notification
+
+## Transport Layer Overview
+
+* On sending host -- Breaks apart application data and sends to network layer
+* On Receiving host -- Puts packets back together and sends them to application layer
+* Various different protocols for different purposes
+* Do we know what we use TCP, UDP and SCTP for?
+* What are some other protocols we know?
+
+## TCP
+
+* TCP is defined by RFC 793, 1122, 1323, 2018, 2581
+* TCP Features
+  * Congestion Control
+  * Flow Control
+  * Connection Setup/Teardown
+  * Error Recovery
+  * Byte Order Preserved
+
+## SCTP
+
+* SCTP is defined by RFC 4960
+* Originally developed for telephone switching systems
+* All the benefits of TCP
+* Additional provision:
+  * Parallel delivery of multiple objects in a transaction
+  * Improved security via DoS protection
+  * Improved reliability through fail-over between host and redundant paths
+
+## UDP
+
+* UDP is defined by RFC 768
+* It is a **best effort**, connectionless protocol with no order of messages
+* Essentially "Fire and Forget"
+
+## TCP vs SCTP
+
+* Sending a HTTP webpage over TCP
+  * Loss of segment requires retransmission, page wont display until received
+  * Waits for serial transmission of missing segment, for image, whole page won't display
+* Sending same page over SCTP
+  * Multiple object sent in parallel
+  * If error occurs on photo page will display and photo will display when it is retransmitted
+
+## SCTP Sounds Great
+
+* Why don't we use SCTP more?
+* Short Answer... [Microsoft](https://www.networkworld.com/article/2222277/what-about-stream-control-transmission-protocol--sctp--.html)
+
+
+
+## One more
+
+* Datagram Congestion Control Protocol (DCCP) is defined by RFC 4340
+* Carries many benefits over TCP
+* Native Transport Layer Control, no need to implement in Application Layer
+* Take a look at this [comparison chart](https://en.wikipedia.org/wiki/Transport_layer#Comparison_of_transport-layer_protocols)
+
+
+
+## The Socket
+
+* Allows communciation between two differnt processes on the same or differnt machine
+* Packet will need to have a source and destination port number as well as a destiation IP Address
+* A UDP socket only has destination IP where a TCP socket has a source and desitination socket
+* UDP is identified by **two-tuple** socket
+* TCP is identified by **4-tuple**
+
+
+Lets try to set up a socket in linux:
+
+We will be setting up a socket connection with NetCat `nc` on the Linux Command line. 
+In this example, we will simply set up one terminal to listen with `-l` and one the other terminal to connect to it. The terminal that is listening is like a webserver, waiting lonely on the internet for someone to talk to it. The other terminal that connects will be you on your computer who wants to get some information from Google.
+
+Server:
+
+```bash
+nv -l localhost 3000
+```
+
+Client:
+
+```bash
+nc localhost 3000
+```
+
+You cna notice that now you can type in one terminal and it will show up in the other terminal. You have established a connection over socket 3000. 
+
+
+## User Datagram Protocol
+
+* Connctionless
+* No Handshake
+  * No connection delay
+  * No connection to maintain
+* Small packet header overhead
+
+## UDP Uses
+
+* Media Streaming
+* DNS
+* Security (IPsec)
+
+
+
+## UDP Packet
+
+* 8 Byte header
+* Error detected by checksum
+* Application layer reassembles order
+
+## TCP -- Lets get reliable
+
+* What are the ways to mess up transmission?
+
+
+In many cases error can be introduced into the transmission in a number of ways. Noise where a bit may be corrupt. Some data may simply be lost and not recieved. Other errors could be due to congestion. With all these challanges a protocol is needed to provide some control around the transmission of data and compensate for these issues.
+
+
+## TCP -- Reliable Transport
+
+* TCP is endpoint to endpoint involving a client and a server
+* Uses checksum to detect corruption
+* Uses ACK, sequence # and retransmission to account for reliability
+* Flow control and congestion control used for loss/delay
+
+## TCP -- The Handshake
+
+* Reliability comes at a cost, establishing a connection
+* Client "SYN" -- Lets chat here is my Initial Sequence Number (INS)
+* Server "SYN ACK" -- Yea lets chat here is my INS
+* Client "ACK" -- All set
+* Sequence number allows tracking of bits transmitted
+* Transfer of buffer size so we know how much data can be handled
+
+![Handshake](https://www.mdpi.com/applsci/applsci-06-00358/article_deploy/html/images/applsci-06-00358-g001.png)
+
+
+The idea of the handshake is that it is a method for establihsing a connection. It provides a place to start the converstation between two machines. One concept that sometimes escapes students is the idea of the sequence numbers and ACK number. Both of those are systems for tracking the bits that have been transmitted. Using the figure 14.9 from the text we see that the Client start with seq=1 and sens 835 bits. We would then expect the server to respond with an ACK "Hey I got you seq=1 and your 835 of data, I'll add them together and your ACK=836, by the way my seq=1 but I got no data. In this example the Google HTTP server will also send a response in addition to the receipt of the request. As you may note there is data assoicated with the response so the Client will be prompted for a reciept of the response in the same manner.
+
+
+## TCP -- Closing Connection
+
+* Similar to opening a 4 way handshake is used for closing
+* Client "FIN" -- I want out
+* Server "ACK" -- OK lets half close this
+* Server "FIN" -- I want out too
+* Client "ACK" -- Lets fully close this!
+* And if the server never sends a FIN the connection will timeout on its own and close the connection
+
+## Simple Acknowledgment vs Pipelined Protocol
+
+* Imagine we need to wait for each response before sending another packet
+* Ping macris.co to find how long a response from my git server takes (about 19 ms)
+* Ping 197.248.116.74 (a DNS server in Kenya) and see how long it takes (about 250 ms)
+* So to send 4 packages would take on second... an eternity in computer speak
+
+## Piplined Protocol
+
+* By using piplined protocol we send a bunch of packages and wait for the responses to arrive
+* You send packaged based on the estimated Round Trip Time (RTT)
+* The buffer becomes critical when sending piplined data
+* Consider the Maximum Segment Size (MSS) being the size of data
+* The number of packets, times the MSS must be less than the buffer N * MSS < Buffer
+
+## Sliding Windows
+
+* Once a package has been acknowledged the window moves
+* May be better illustrated with a [Video](https://www.youtube.com/watch?v=zY3Sxvj8kZA)
+* Or better yet.. with [error built in](https://www.youtube.com/watch?v=lk27yiITOvU)
+
+
+Some kind person programmed the same thing for you interactive pleasure!
+[Here](https://www.ccs-labs.org/teaching/rn/animations/gbn_sr/)
+
+
+## TCP Header Format
+
+![TCP Header](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-25%2017-23-47.png)
+
+| Flag           | Description                                                                                                                                                     |   |   |   |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|---|---|---|
+| CWR            | Congestion Window Reduced (CWR) flag is set by the sending host to indicate that it received a TCP segment with the ECE flag set (added to header by RFC 3168). |   |   |   |
+| ECE (ECN-Echo) | indicate that the TCP peer is ECN capable during 3-way handshake (added to header by RFC 3168).                                                                 |   |   |   |
+| URG            | indicates that the URGent pointer field is significant                                                                                                          |   |   |   |
+| ACK            | indicates that the ACKnowledgment field is significant (Sometimes abbreviated by tcpdump as “.”)                                                                |   |   |   |
+| PSH            | Push function                                                                                                                                                   |   |   |   |
+| RST            | Reset the connection (Seen on rejected connections)                                                                                                             |   |   |   |
+| SYN            | Synchronize sequence numbers (Seen on new connections)                                                                                                          |   |   |   |
+| FIN            | No more data from sender (Seen after a connection is closed)                                                                                                    |   |   |   |
+
+
+## TCP -- Analysis 1
+
+![What is this showing?](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-25%2017-34-53.png)
+
+## TCP -- Analysis 2
+
+![What is this showing?](https://cga.sfo2.digitaloceanspaces.com/cns/images/Screenshot%20from%202020-01-25%2017-35-06.png)
+
+## Explicit Congestion Notification
+
+* In order to help congestion control a router can notify a host to throttle back
+* This control is known as Explicit Congestion Notification (ECN)
+* Enabled in Server 2012 by default
+* 3-way handshake can indicate support for ENC
+
+
+### ENC Handshake
+
+Characteristics of the 3-way handshake that indicates support for ECN in end hosts
+
+| From   | To     | Packet  | Type                         | Details                                                              |
+|--------|--------|---------|------------------------------|----------------------------------------------------------------------|
+| Client | Server | SYN     | ECN-Setup SYN Packet         | SYN packet with both ECE and CWR flags set                           |
+| Client | Server | SYN     | Non-ENC-setup SYN Packet     | SYN packet with either an ECE or CWR flag not set                    |
+| Server | Cient  | SYN-ACK | ECN-setup SYN-ACK packet     | SYN-ACK packet with an ECE flag set but no CWR flag set              |
+| Server | Client | SYN-ACK | Non-ECN-setup SYN-ACK packet | SYN-ACK packet with any other configuration of the ECE and CWR Flags |
+
+ The sender uses two bits in the ToS of the IP header to inform the involved routers that ENC is supported
+
+
+## Round Trip Time Measurement
+
+* Defined by RFC 1323
+* May appear in any data or ACK segment by adding 10 bytes to the 20-byte TCP header
+
+| Kind = 8 | 10 | TS Vlaue (TSval) | TS Echo Reply (TSecr) |
+|----------|----|------------------|-----------------------|
+
+
+Lets calculate a RTTM. If the sender sends a packet with a TSval = 31. The reciever echoes that it recieved TSval of 31. When the sender recieves the ACK response it marks the time at T = 38. Being told this is a Linux system where the timestamp clock is 10 ms.
+
+That makes the calculation:
+
+RTT = clock period * (response time - send time) ---- RTT = 10ms * (38 -31) = 7 ms
+
+
+* Wu/Irwin 17.1 - 17.11 -- This material is new and needs to be reviewed in entirety.
+* [McAffe Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/mcfee_8_19.pdf)
+* [CrowdStrike Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/crowdstrike2019.pdf)
+* [Carbon Black Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/carbon_black2019.pdf)
+* [Cyber Edge Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/cyber_edge2019.pdf)
+* [Ernst Young Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/EY_2019.pdf)
+* [FireEye Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/fireeye2019.pdf)
+* [Fortigate Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/fortigate.pdf)
+* [NCSC Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/NCSC.pdf)
+* [Proof Point Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/proof_point2019.pdf)
+* [SANS Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/SANS2019.pdf)
+* [SonicWall Threat Report](https://cga.sfo2.digitaloceanspaces.com/cns/sonicwall_2019.pdf)
