@@ -3607,3 +3607,99 @@ In the world of behavior based detection it is important to establish a baseline
 
 * Utilize ML Training (Supervised, Semi-Supervised, Unsupervised)
 * Incorporate various machine learning methods
+
+# Class 18 Intrusion Detection and Intrusion Prevention Systems Deux
+## Definitions
+
+* TTP -- Tactics, Techniques and Procedures
+
+## HIPS
+
+* Host based protection: AKA Next Gen Anti-virus
+  * Anti-virus/anti-malware
+  * Firewall
+  * IDS/IPS
+* Usually centrally managed
+* Vulnerable to tampering if host is compromised (before or after installation)
+* Small view of situation
+* Lost of anomalies leads to False Positives
+
+Many products have spent time focusing on protecting the host. As the end point the host has, over time, been ignored because it was easier to implement network controls and try to give hosts a "safe place" to be in. With more mobile workforce, hosts can be assumed to almost always be in hostile networks. This exposes these hosts to all layers of attack. From physical attack to application, you get the full stack threat surface to a mobile worker. As business brings workers to other nations we only compound those issues. Host Based Intrusion Prevention has been replaced by "Next Gen Anti-Virus" as a way to sell a method of protecting the host that is both behavioral and signature based. It is difficult to determine anomalies because the end user tends to have a varied and diverse use case. For example, you may allow video-chatting with family on the same machine as processing office documents, or accessing a private database. With all these things we need to consider the network stack as we consider the best way to build and protect systems. 
+
+* What would you do to protect the end user machine?
+* What impact would your controls have on productivity?
+
+## How HIPS does it
+
+* Builds a list of objects to track and databases them
+* Tracks system calls, file and log modifications, binaries, shell commands, back-doors/rootkits etc
+* Can utilize the Trusted Platform Module (TPM) to protect the system
+* Inspect traffic after SSL or VPN decryption
+
+
+This is a good time to talk about what we are actually looking for on the host. In addition to changes to binaries and manipulation of logs and time we are looking for viruses/malware/rootkits anything that is going to do bad things on the system that was not there before. We do not know all the things out there so we have two approaches, behavioral and signature. We have briefly discussed the idea of what a virus is (we will use that turn for all the bad things mentioned above). It is easy to identify a virus body and block against it. This can be done with a simple hash signature or digest. From there, we just check the hash and if it is the same we block it, and if not we can allow it to be on a system and run... EASY DAY...right? Attacked decided they didn't have enough Windows XP machines to break into easy enough, so they then decided to start encrypting the body of the virus with a decryptor, which made it slightly harder to track and stop but really not much of an improvement. From there, attackers decided to employ **oliomortphic** viruses that would have multiple decryptors which were more difficult to get a signature on but because they always had a pattern it was easy enough for AV to create a **Dynamic Decryptor** that would enable the payload to be decrypted and identified. That brings us to **polymorphic** viruses that had millions of decryptors and were no longer able to track because they were able to recompile and change the decryptor on the fly, impossible to track in the traditional means. At that point we need, as a AV defender, to look at the decrypted virus and try to allow the virus to produce the decrypted virus body to see what it is. Note: now we have a live virus to deal with... We can do this by sand-boxing and running in a quarantine area, but the science is not yet perfect. To add to the issue, **metamorphic** viruses that not only change their decryptors on the fly, but employ a similar style decryptor but also the body chances with ever decryption. This is the minority in the virus world but as you can imagine it is very difficult tot detect.
+
+## NIPS Jobs
+
+* Packet dropping
+* Session termination
+* Adjustment of Firewall Rules
+* Traffic shaping
+* Alert Generation
+* Log Generation
+
+
+Network Intrusion Prevention has a number of jobs it accomplishes. It is responsible for terminating sessions, adjusting firewalls rules, traffic shaping, alert generating and log generating. Interesting the text points out dropping of packets. This is notable only because the basic packet filtering we discussed the ability to ALLOW, REJECT or DROP (we also discussed forward in the proxy sense). So what is the difference between REJECT and DROP. To understand this lets look to the documentation responsible for such designations, RFC1122 section 3.2.2.1 and 4.2.3.9:
+
+```bash
+3.2.2.1  Destination Unreachable: RFC-792
+A Destination Unreachable message that is received MUST be reported to the transport layer. The transport layer SHOULD use the information appropriately; for example, see Sections 4.1.3.3, 4.2.3.9, and 4.2.4 below. A transport protocol that has its own mechanism for notifying the sender that a port is unreachable (e.g., TCP, which sends RST segments) MUST nevertheless accept an ICMP Port Unreachable for the same purpose.
+
+4.2.3.9  ICMP Messages
+  TCP MUST act on an ICMP error message passed up from the IP layer, directing it to the connection that created the error.  The necessary demultiplexing information can be found in the IP header contained within the ICMP message.
+Destination Unreachable -- codes 2-4
+These are hard error conditions, so TCP SHOULD abort the connection
+```
+
+As we can see the biggest difference is in a REJECT and ICMP error is send back and for a drop it does not send a response. In a legitimate case a user with REJECT will allow the attempt to cease immediately. Where a drop will retry for at least 100 seconds. So not great for users. For attackers, the idea was using DROP will not give information filtered ports vs closed ports. In modern scanner they will not retry for 100 seconds and don't care if the port is rejected or dropped. You can decide the cost to the user vs the attacker and which will most likely spend more time fighting with it but there is little reason to opt for DROP over REJECT. If you do, try not to veil it in an air of security.
+
+
+## NIDS/NIPS
+
+* Sensors track traffic on switches and routers either in line (IPS) or with a tap or span port.
+* Watch for unusual traffic patterns.
+* Protect all aspects of network traffic to all devices, like access points or printers.
+* Protect against DDoS.
+* Monitor user traffic for malicious command sequence.
+* Monitor user traffic for anomalies (using admin protocols etc).
+
+
+There are many benefits to NIDS/NIPS at a network level. They provide the ability to have a high level view on your environment. They can look at traffic and identify when something is not going as expected. Internally it can track and control the spread of malicious commands and from the outside protect against attacks against availability. 
+
+
+## NIDS/NIPS Drawbacks
+
+* Can't protect against attacks if payload is encrypted (SSL, SSH)
+* Has no insight into host
+* High compute requirements to maintain line speeds
+
+## Put them together
+
+* By combining HIDS and NIDS (HIPS and SIPS) you get a more complete picture
+* Threats can be correlated between the two
+* NIDS has a global view
+* HIDS has a ground truth view
+* Many times called **Distributed Intrusion Detection**
+* Sound like something we already talked about?
+
+## IP Reputation
+
+* As attackers user IP addresses to attack the IPs can be blacklisted via IP reputation
+* Do you think you would use your IP to attack? Why not?
+
+## Honeypot
+
+* A mechanism to lure attackers into a false vulnerable system
+* Primarily to slow attackers and gain insight into TTPs
+
+## Lets Build Mrs. Pots
