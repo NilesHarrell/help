@@ -3703,3 +3703,80 @@ There are many benefits to NIDS/NIPS at a network level. They provide the abilit
 * Primarily to slow attackers and gain insight into TTPs
 
 ## Lets Build Mrs. Pots
+
+# Class 19 Intrusion Detection and Intrusion Prevention Systems Part Trois
+
+## References
+
+* [Suricata](https://suricata-ids.org/)
+* [tPot Honeypot](https://github.com/dtag-dev-sec/tpotce)
+* [Das Sicherhesitstacho](https://sicherheitstacho.eu/start/main)
+* [Internet Storm Center](https://isc.sans.edu/)
+* [Honeynet](https://www.honeynet.org/)
+
+## Exploring Suricata
+
+* Suricata is an open source IDS/IPS
+* It is similar to Snort
+* Because of its open nature it is easy to deploy and learn on
+
+## Lets Watch about Suricata
+
+* [Suricata Video](https://youtu.be/S0-vsjhPDN0) -- 27 Minutes
+* From this video you should see how to:
+  * Enable Suricata on pfSense
+  * Import rules
+  * Tune rules
+
+## Suricata on tPot
+
+* Network traffic is being analyzed by Suricata
+* Provides us an easy way to learn about attack patterns
+* As we saw implementing is non-trivial
+
+## What is tPot
+
+* A collection of HoneyPots
+* A set of additional tools
+* ELK stack to manage and visualize
+* Uses Docker to containerize different parts
+
+## Collective approach to Security
+
+* Sharing information can assist in identifying issues early
+* Allow targets to share attacks with engineers to patch systems
+* Limits the scope of an attack
+
+## SSH into Mrs. Pots
+
+* Looking at Mrs. Pots we see additional attacks
+* Become familiar with the interface
+
+
+## Lets Visit Mrs. Pots
+
+* GUI -- https://mrspots.hacking.fans:64297/
+* user: cns2020
+* pw: erikthegreat2020!!!
+
+
+* [adbhoney](https://github.com/huuck/ADBHoney) -- Simulate vulnerable mobile devices (Android)
+* [ciscoasa](https://github.com/Cymmetria/ciscoasa_honeypot) -- Cisco ASA honeypot specifically detecting CVE-2018-0101
+* [citrixhoneypot](https://github.com/MalwareTech/CitrixHoneypot) -- Citrix ADC Honeypot to detect CVE-2019-19781
+* [conpot](http://conpot.org/) -- ICS/SCADA
+* [cowrie](http://www.micheloosterhof.com/cowrie/)  -- SSH/Telnet honeypot
+  * [Cowrie Documentation](https://cowrie.readthedocs.io/en/latest/index.html)
+* [dionaea](https://github.com/DinoTools/dionaea) -- SMB, HTTP, FTP, TFTP, MSSQL MySQL SIP
+  * [Dionaea Documentation](https://dionaea.readthedocs.io/en/latest/)
+* [elasticpot](https://github.com/schmalle/ElasticpotPY) -- Mimic Elasticsearch to be attacked
+* [glutton](https://github.com/mushorg/glutton)
+* [heralding](https://github.com/johnnykv/heralding)
+* [honeypy](https://github.com/foospidy/HoneyPy)
+* [honeytrap](https://github.com/armedpot/honeytrap/) -- TCP UDP protocol attacks
+  * [HoneyTrap Documentation](https://docs.honeytrap.io/)
+* [mailoney](https://github.com/awhitehatter/mailoney) -- SMTP service honeypot for attacks on mail servers
+* [medpot](https://github.com/schmalle/medpot)
+* [rdpy](https://github.com/citronneur/rdpy) -- RDP protocol attacks
+* [snare](http://mushmush.org/) -- Site that logs http webapp vulns
+* [tanner](http://mushmush.org/)
+
