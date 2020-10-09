@@ -73,3 +73,4 @@
 * LKM -- Loadable Kernel Modules
 * IDS -- Intrusion Detection System
 * IPS -- Intrusion Prevention System
+* TTP -- Tactics, Techniques and Procedures
