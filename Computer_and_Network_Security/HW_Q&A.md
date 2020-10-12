@@ -1,28 +1,28 @@
 # HW 1
 
-1. The Internet backbone consists of a group of regional ISPs
+1. The Internet backbone consists of a group of regional ISPs   **False**
 
-2. Elements within the Internet core are typically interconnected with 
+2. Elements within the Internet core are typically interconnected with **Fiber**
 
-3. Routers operate at
+3. Routers operate at **Layer 3**
 
-4. Statistical multiplexing is an efficient method for packet switching
+4. Statistical multiplexing is an efficient method for packet switching **True**
 
-5. Book Question 1.4 (with answers to choose from)
+5. Book Question 1.4 (with answers to choose from) **2480**
 
-6. The application layer interface within a host is called the:
+6. The application layer interface within a host is called the: **Application programming interface and Socket**
 
-7. If a FTP connection message is to be sent to a FTP server, the destination port number to be used is 
+7. If a FTP connection message is to be sent to a FTP server, the destination port number to be used is **21**
 
-8. Cookies can be used to
+8. Cookies can be used to **Identify a user and Obtain a considerable amount of data about a user**
 
-9. If the proxy does not have the most up-to-date version of an object, HTTP will use the following method to obtain it
+9. If the proxy does not have the most up-to-date version of an object, HTTP will use the following method to obtain it **The Conditoional Get method**
 
-10. Because of its importance, the DNS service is centralized.
+10. Because of its importance, the DNS service is centralized. **False**
 
-11. ICANN maintains the IP addresses for all the authoritative DNS servers.
+11. ICANN maintains the IP addresses for all the authoritative DNS servers. **True** ?
 
-12. Company x must put its NS RR at the __________ name server.
+12. Company x must put its NS RR at the __________ name server. **Top-Level Domain** ?
 
-13. Company x must put its MX RR at the ______ name server.
+13. Company x must put its MX RR at the ______ name server. **Authoritative**
 
