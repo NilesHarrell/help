@@ -1,4 +1,4 @@
-##HW 1
+# HW 1
 The Internet backbone consists of a group of regional ISPs
 Elements within the Internet core are typically interconnected with 
 Routers operate at
