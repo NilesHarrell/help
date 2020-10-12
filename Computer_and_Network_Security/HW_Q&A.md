@@ -129,3 +129,17 @@ Use the following picture for questions 10 and 11
 19. When an individual is under a personal phishing attack, the attack is called **Spear phishing**
 
 20. Once a hacker installs a MBR rootkit on a machine, the hacker has complete control of the machine. **True**
+
+21. Trojan horses, viruses and rootkits are examples of malicious programs that **Propagate independently** ?
+
+22. Worms and Zombies are examples of malicious programs that **Propagate independently**
+
+23. Buffer overflows are a serious security issue of some software. **True**
+
+24. Firewalls can block traffic between the internal network and the **Internet and DMZ**
+
+25. VPN traffic is allowed through the firewall. **True**
+
+26. A firewall passes or blocks traffic based upon **IP address and Port number**
+
+27. The TCP port numbers greater than 1024 are used for servers with TCP connections in a stateless packet filtering environment. **True**
