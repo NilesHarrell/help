@@ -74,3 +74,58 @@ Use this picture for questions 5-8
 
 [HW2.1]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW2.1.png "HW2.1"
 [HW2.2]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW2.2.png "HW2.2"
+
+# HW 3
+
+The following HTTP response and request data corresponds to the sequence of events outlined in Figure P14.1: S1 = 1000, A1 = 2000, L1 = 100 and L2 = 1500.
+
+![alt text][HW3.1]
+
+1.What is value for X? **2000**
+
+2. What is value for Y? **1100**
+
+3. What is value for Z? **0**
+
+4. What is value for S2? **2000**
+
+5. What is value for A2? **1100**
+
+6. What is value for S3? **1100**
+
+7. What is value for A3? **3500**
+
+8. What is value for L3? **0**
+
+9. Given the simple acknowledgment scheme shown in the figure and the following
+data: L = 10,000 bits, R = 1 Gbps, and RTT = 0.07 s, determine the link utilization.
+
+![alt text][HW3.2]
+
+**.0001428**
+
+Use the following picture for questions 10 and 11
+
+![alt text][HW3.3]
+
+10. If a sender sends N packets to a receiver in a pipelined fashion, as outlined in the figure, and the parameters are L = 10,000 bits, R = 1 Gbps, RTT = 0.07 s, the trans-mission delay D TR = L/R and N = 2, determine the link utilization. **.0002857**
+
+11. If a sender sends N packets to a receiver in a pipelined fashion, as outlined in the figure, and the parameters are L = 10,000 bits, R = 1 Gbps, RTT = 0.07 s, the trans-mission delay D TR = L/R and N = 2. Determine the minimum window size at the receiver. **20000 bits**
+
+12. The sending host uses transport protocols to break application layer messages into segments and pass them to the link layer. **False**
+
+13. The security property that indicates that only the receiver or sender is able to understand the contents of a message is called? **Confidentiality**
+
+14. Attacks that disrupt or block availability are known as **DDoS attacks**
+
+15. The assurance that information is not altered by elements along the communication path is known as **Integrity**
+
+16. Eavesdropping and packet sniffing are considered to be attacks on **Confidentiality**
+
+17. Identity theft and password cracking are considered to be attacks on **Authentication**
+
+18. Conficker is unusual in that it is worm as well as a rootkit. **True**
+
+19. When an individual is under a personal phishing attack, the attack is called **Spear phishing**
+
+20. Once a hacker installs a MBR rootkit on a machine, the hacker has complete control of the machine. **True**
