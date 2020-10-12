@@ -75,3 +75,8 @@ What does the vagrant file (below link) do?
 https://cga.sfo2.digitaloceanspaces.com/Vagrantfile
 **Free Response**
 
+I put: *It configures Vagrant to version 2.
+It then configures a box for centos 7.
+It gives the IP address of 127.0.0.1 to use.
+It then configures a vm provision for ansible
+then sets ansible.playbook to "playbook.yml"*
