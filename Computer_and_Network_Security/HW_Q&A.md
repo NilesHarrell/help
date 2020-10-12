@@ -26,3 +26,36 @@
 
 13. Company x must put its MX RR at the ______ name server. **Authoritative**
 
+# HW 2
+
+1. XML provides the foundation for storing and exchanging data across different operating systems **True**
+
+2. PHP is the Post Hypertext Processor script language for the server side **True**
+
+3. TCP packets are limited to 64 kilobytes for datagrams **False**
+
+4. A fundamental difference between TCP and UDP is that TCP is connection-oriented, while UDP is connectionless **True**
+
+5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **00-50-12-FB-76-CP**
+
+6. What is the Source IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.2**
+
+7. What is the Router IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.1 and 131.204.10.1**
+
+8. What is the Destination IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.10.3**
+
+9. Which of the following functions are performed by the network layer? **Routing**
+
+10. Virtual circuits provide a reserved link from source interface to destination interface. **True**
+
+11. Marking traffic for a certain priority which corresponds to a specific QoS is done by **Originating equipment and VLAN Switch and Router**
+
+12. CIDR **Eliminates the class limitations resulting form the network ID and Is the representation used for configuring routers and firewalls**
+
+13. The information needed to map from IP address to MAC address within each host is saved in the ARP cache. **True**
+
+14. When a host joins a network, it can dynamically obtain its IP address from the net-work DHCP server. **True**
+
+15. What is the only destination from W that does not use the X router link? *Insert Picture* **Y**
+
+16. Routing tables are generated **Statically and Dynamically**
