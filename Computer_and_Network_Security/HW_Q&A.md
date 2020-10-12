@@ -8,7 +8,11 @@
 
 4. Statistical multiplexing is an efficient method for packet switching **True**
 
-5. Book Question 1.4 (with answers to choose from) **2480**
+5. Assume the following: (1) the propagation delay between browser and server is 100
+ms, (2) the transmission rate of the link is 10 Mbps, (3) a web page, base HTML file
+100 Kbytes in length, contains two images of 1000 KBytes each. Compute the total
+delay when a browser downloads this web page given the use of non-persistent HTTP
+with Parallel TCP Connections and neglecting all other delays. **2480ms**
 
 6. The application layer interface within a host is called the: **Application programming interface and Socket**
 
