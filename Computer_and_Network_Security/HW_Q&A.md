@@ -42,11 +42,11 @@ Use this picture for questions 5-8
 
 5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network. **00-50-12-FB-76-CP**
 
-6. What is the Source IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.2**
+6. What is the Source IP Address for a frame traveling from Station A to Station B in the following network. **131.204.1.2**
 
-7. What is the Router IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.1 and 131.204.10.1**
+7. What is the Router IP Address for a frame traveling from Station A to Station B in the following network. **131.204.1.1 and 131.204.10.1**
 
-8. What is the Destination IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.10.3**
+8. What is the Destination IP Address for a frame traveling from Station A to Station B in the following network. **131.204.10.3**
 
 9. Which of the following functions are performed by the network layer? **Routing**
 
