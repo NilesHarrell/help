@@ -64,8 +64,13 @@ Use this picture for questions 5-8
 
 14. When a host joins a network, it can dynamically obtain its IP address from the net-work DHCP server. **True**
 
-15. What is the only destination from W that does not use the X router link? *Insert Picture* **Y**
+15. What is the only destination from W that does not use the X router link? 
+
+![alt text][HW2.2]
+
+**Y**
 
 16. Routing tables are generated **Statically and Dynamically**
 
 [HW2.1]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW2.1.png "HW2.1"
+[HW2.2]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW2.2.png "HW2.2"
