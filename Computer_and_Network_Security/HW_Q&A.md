@@ -24,9 +24,9 @@ with Parallel TCP Connections and neglecting all other delays. **2480ms**
 
 10. Because of its importance, the DNS service is centralized. **False**
 
-11. ICANN maintains the IP addresses for all the authoritative DNS servers. **True** ?
+11. ICANN maintains the IP addresses for all the authoritative DNS servers. **True** 
 
-12. Company x must put its NS RR at the __________ name server. **Top-Level Domain** ?
+12. Company x must put its NS RR at the __________ name server. **Top-Level Domain** 
 
 13. Company x must put its MX RR at the ______ name server. **Authoritative**
 
@@ -130,7 +130,7 @@ Use the following picture for questions 10 and 11
 
 20. Once a hacker installs a MBR rootkit on a machine, the hacker has complete control of the machine. **True**
 
-21. Trojan horses, viruses and rootkits are examples of malicious programs that **Propagate independently** ?
+21. Trojan horses, viruses and rootkits are examples of malicious programs that **Propagate independently** 
 
 22. Worms and Zombies are examples of malicious programs that **Propagate independently**
 
