@@ -36,7 +36,11 @@
 
 4. A fundamental difference between TCP and UDP is that TCP is connection-oriented, while UDP is connectionless **True**
 
-5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **00-50-12-FB-76-CP**
+5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network.
+
+![alt text][HW2.1]
+
+**00-50-12-FB-76-CP**
 
 6. What is the Source IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.2**
 
@@ -59,3 +63,5 @@
 15. What is the only destination from W that does not use the X router link? *Insert Picture* **Y**
 
 16. Routing tables are generated **Statically and Dynamically**
+
+[HW2.1]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW2.1.png "HW2.1"
