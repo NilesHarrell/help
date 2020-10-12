@@ -36,11 +36,11 @@
 
 4. A fundamental difference between TCP and UDP is that TCP is connection-oriented, while UDP is connectionless **True**
 
-5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network.
+Use this picture for questions 5-8
 
 ![alt text][HW2.1]
 
-**00-50-12-FB-76-CP**
+5. What is the Source MAC Address for a frame traveling from Station A to Station B in the following network. **00-50-12-FB-76-CP**
 
 6. What is the Source IP Address for a frame traveling from Station A to Station B in the following network. *Insert Picture* **131.204.1.2**
 
