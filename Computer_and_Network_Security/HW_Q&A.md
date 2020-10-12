@@ -143,3 +143,7 @@ Use the following picture for questions 10 and 11
 26. A firewall passes or blocks traffic based upon **IP address and Port number**
 
 27. The TCP port numbers greater than 1024 are used for servers with TCP connections in a stateless packet filtering environment. **True**
+
+[HW3.1]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW3.1.png "HW3.1"
+[HW3.2]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW3.2.png "HW3.2"
+[HW3.3]: https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/Pictures/HW3.3.png "HW3.3"
