@@ -43,3 +43,12 @@ nano message.txt
 ``
 gpg -d message.txt
 ``
+## Helpful commands
+1. Gpg help
+``
+gpg -h
+``
+2. List gpg keys
+``
+gpg -k
+``
