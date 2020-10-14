@@ -18,6 +18,16 @@ Similar to ssh, you need your username and the address of the server ``username@
 
 2. Send file to your directory on the server ``scp my_file.txt username@exam1.hacking.fans:/home/username/``
 
+#### Sending mulitple files to server
+1. Create files ``my_file.txt`` and ``my_file2.txt``
+
+2. Send files to your directory on the server ``scp my_file.txt my_file2.txt username@exam1.hacking.fans:/home/username/``
+
+#### Send all in your directory to server
+1. Send all files to your directory on the server ``scp * username@exam1.hacking.fans:/home/username/``
+
+2. Or send all files recursively to the server ``scp -r * username@exam1.hacking.fans:/home/username/``
+
 #### Receiving files from server
 1. File on the server ``server_file.txt``
 
