@@ -1,20 +1,20 @@
 # Linux command list
 
-``ls``-used to list files [More](https://www.tecmint.com/15-basic-ls-command-examples-in-linux/)
+``ls``-used to list files. [More](https://www.tecmint.com/15-basic-ls-command-examples-in-linux/)
 
-``grep``
+``grep`` -used to search a file. [More](https://www.geeksforgeeks.org/grep-command-in-unixlinux/)
 
-``sudo``
+``sudo``-used to run commands as root. [More](https://phoenixnap.com/kb/linux-sudo-command)
 
 ``ssh`` -used to remotely connect to servers. [More](https://github.com/Spencer-Kotys/help/blob/main/Computer_and_Network_Security/ssh_help.md)
 
-``nslookup``
+``nslookup`` -used for getting information from DNS server. [More](https://www.geeksforgeeks.org/nslookup-command-in-linux-with-examples/)
 
-``cat``
+``cat`` -used to display files. [More](https://www.tecmint.com/13-basic-cat-command-examples-in-linux/)
 
-``less``
+``less`` -used to display contents one page at a time. [More](https://linuxize.com/post/less-command-in-linux/)
 
-``gpg``
+``gpg`` -used to encrypt and decrypt files.
 
 ``sha###sum``
 
