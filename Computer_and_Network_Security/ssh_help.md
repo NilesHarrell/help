@@ -24,3 +24,31 @@ Similar to ssh, you need your username and the address of the server ``username@
 2. What you want the file to be saved as ``my_copy.txt``
 
 3. Tell the server to send you the file and save it on your machine ``scp username@exam1.hacking.fans:/home/username/server_file.txt my_copy.txt``
+
+### SFTP
+Creates an interactive file transfer shell
+
+`` sftp username@exam1.hacking.fans``
+
+#### Quick list of commands
+help: ``?`` or ``help``
+
+Present Working Directory, server: ``pwd`` local: ``lpwd``
+
+Listing Files, server: ``ls`` or ``dir`` local: ``lls``
+
+Uploading file: ``put my_file.txt``
+
+Uploading Multiple Files: ``mput *.txt``
+
+Download file: ``get server_file.txt``
+
+Download multiple files: ``mget *.txt``
+
+Switching Directories, server ``cd`` local ``lcd``
+
+Creating Directories, server ``mkdir dir`` local ``lmkdir dir``
+
+Leave while keeping the connection open: ``!`` then return to the server with ``exit``
+
+Close the connection: ``exit`` or ``quit``
