@@ -39,6 +39,10 @@ nano newfile.txt
 ``
 gpg --import newfile.txt
 ``
+### Command Line
+1. Get key id ``ABCDEF0123456789``
+
+2. Get key from server ``gpg --keyserver keys.gnupg.net --recv-keys ABCDEF0123456789``
 ## Sending a message
 1. Create message
 ``
