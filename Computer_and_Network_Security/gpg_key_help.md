@@ -16,7 +16,9 @@
 
 ``
 pub   rsa4096/ABCDEF0123456789 2018-01-01 [SCEA] [expires: 2021-01-01]
+
       ABCDEF0123456789ABCDEF0123456789
+      
 uid              [ ultimate ] name
 ``
 
