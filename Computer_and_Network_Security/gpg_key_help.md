@@ -14,13 +14,11 @@
 
 2. This results in
 
-``
+```
 pub   rsa4096/ABCDEF0123456789 2018-01-01 [SCEA] [expires: 2021-01-01]
-
       ABCDEF0123456789ABCDEF0123456789
-      
 uid              [ ultimate ] name
-``
+```
 
 3. Copy the key id after the rsa4096 ``ABCDEF0123456789``
 
