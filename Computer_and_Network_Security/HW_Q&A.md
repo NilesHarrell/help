@@ -102,7 +102,7 @@ data: L = 10,000 bits, R = 1 Gbps, and RTT = 0.07 s, determine the link utilizat
 
 ![alt text][HW3.2]
 
-**.0001428**
+**.0001428**  **EQUATION for Link Utilization: (L/R)/[RTT + (L/R)]**
 
 Use the following picture for questions 10 and 11
 
